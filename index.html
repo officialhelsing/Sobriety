@@ -49,25 +49,24 @@
   }
   h1 {
     margin: 0;
-    max-width: 52rem;
     font-family: var(--display);
-    font-size: clamp(2.35rem, 1.2rem + 4.2vw, 4.35rem);
+    font-size: clamp(1.7rem, 1.15rem + 1.1vw, 2.05rem);
     font-weight: 500;
-    line-height: 1.08;
-    letter-spacing: -0.028em;
-    text-wrap: balance;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    white-space: nowrap;
   }
   .subtitle {
-    margin: 1.25rem 0 0;
-    max-width: 42rem;
+    margin: 0.75rem 0 0;
     font-family: var(--display);
-    font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.2rem);
+    font-size: clamp(0.7rem, 0.42rem + 0.5vw, 0.875rem);
     line-height: 1.35;
+    letter-spacing: -0.01em;
     color: var(--ink-muted);
-    text-wrap: pretty;
+    white-space: nowrap;
   }
   .stats {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1px;
@@ -78,26 +77,29 @@
   @media (min-width: 640px) {
     .stats { grid-template-columns: repeat(4, 1fr); }
   }
-  .stats > div { background: var(--paper-raised); padding: 1.25rem 1.1rem; }
+  .stats > div { background: var(--paper-raised); padding: 1rem; }
   .stats dt {
     font-size: 0.75rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-subtle);
+    white-space: nowrap;
   }
   .stats dd {
-    margin: 0.5rem 0 0;
+    margin: 0.4rem 0 0;
     font-family: var(--display);
-    font-size: clamp(1.65rem, 1.2rem + 1.6vw, 2.1rem);
+    font-size: clamp(1.15rem, 1.02rem + 0.45vw, 1.4rem);
     font-weight: 500;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
   .stats p {
     margin: 0.35rem 0 0;
-    font-size: 0.875rem;
-    line-height: 1.35;
+    font-size: 0.75rem;
+    line-height: 1;
     color: var(--ink-muted);
+    white-space: nowrap;
   }
   #abstract { margin-top: 3.5rem; }
   .label-rule {
@@ -133,14 +135,15 @@
     font-family: var(--display);
     font-weight: 500;
     letter-spacing: -0.02em;
-    text-wrap: balance;
   }
-  .figures h2 { font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem); }
-  .section-head h2 { font-size: clamp(1.65rem, 1.2rem + 1.6vw, 2.35rem); line-height: 1.25; }
-  .caption, .fig-note, .note {
-    color: var(--ink-muted);
+  .figures h2 { font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem); }
+  .section-head h2 {
+    font-size: clamp(1.15rem, 1.02rem + 0.45vw, 1.4rem);
+    line-height: 1.25;
+    white-space: nowrap;
   }
-  .figures .caption, .figures > div > p {
+  .caption, .fig-note, .note { color: var(--ink-muted); }
+  .figures > div > p {
     margin: 0.5rem 0 0;
     font-size: 0.875rem;
     text-align: justify;
@@ -148,9 +151,9 @@
     color: var(--ink-muted);
   }
   .figures ul { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1.25rem; }
-  .fig-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
-  .fig-label { margin: 0; font-size: 0.875rem; }
-  .fig-note { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--ink-subtle); }
+  .fig-row { display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
+  .fig-label { margin: 0; font-size: 0.875rem; white-space: nowrap; }
+  .fig-note { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--ink-subtle); white-space: nowrap; }
   .share { margin: 0; font-family: var(--display); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
   .bars { margin-top: 0.5rem; display: grid; gap: 0.5rem; }
   @media (min-width: 640px) { .bars { grid-template-columns: 1fr 1fr; } }
@@ -217,12 +220,15 @@
   h3 {
     margin: 3rem 0 0;
     font-family: var(--display);
-    font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem);
+    font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
     font-weight: 500;
     letter-spacing: -0.02em;
   }
   .katex { color: inherit; font-size: 1.05em; }
   .katex-display { margin: 0; overflow-x: auto; overflow-y: hidden; text-align: center; }
+  @media (max-width: 639px) {
+    h1, .subtitle, .section-head h2 { white-space: normal; }
+  }
   @media print {
     body { background: white; }
     article { max-width: none; padding: 0; }
@@ -238,19 +244,19 @@
     <dl class="stats"><div>
       <dt>NHIS 2024</dt>
       <dd>2.1 : 1</dd>
-      <p>Female-to-male psychotropic ratio</p>
+      <p>F:M psychotropic ratio</p>
     </div><div>
       <dt>NSFG 2022–24</dt>
       <dd>55%</dd>
-      <p>Reproductive-age females on contraception</p>
+      <p>Contraception, 15–49</p>
     </div><div>
       <dt>Section 20</dt>
       <dd><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span></dd>
-      <p>Steady-state kinetic weight of daily Rx</p>
+      <p>Daily Rx weight</p>
     </div><div>
       <dt>Section 20</dt>
       <dd><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0.06</span></span></span></span></dd>
-      <p>Annual kinetic weight of weekly bingeing</p>
+      <p>Weekly binge weight</p>
     </div></dl>
     <section id="abstract">
       <h2 class="label-rule">Abstract</h2>
@@ -280,7 +286,7 @@
       </div>
     </li><li>
       <div class="fig-row">
-        <p class="fig-label">Depression / anxiety pharmacotherapy</p>
+        <p class="fig-label">Antidepressant pharmacotherapy</p>
         <p class="fig-note">NHIS 2023 · daily agents</p>
       </div>
       <div class="bars">
@@ -335,28 +341,28 @@
         <p class="share">100%</p>
       </div>
       <div class="track thin"><div class="fill forest" style="width:100%"></div></div>
-      <p class="fig-note">~55% of females aged 15–49; no male population counterpart</p>
+      <p class="fig-note">~55% of females 15–49; no male counterpart</p>
     </li><li>
       <div class="fig-row">
         <p class="fig-label">GLP-1 weight-loss cohort</p>
         <p class="share">74%</p>
       </div>
       <div class="track thin"><div class="fill forest" style="width:74%"></div></div>
-      <p class="fig-note">70–79% of outpatient weight-loss prescriptions</p>
+      <p class="fig-note">70–79% of weight-loss prescriptions</p>
     </li><li>
       <div class="fig-row">
         <p class="fig-label">Levothyroxine users</p>
         <p class="share">84%</p>
       </div>
       <div class="track thin"><div class="fill forest" style="width:84%"></div></div>
-      <p class="fig-note">80%+ female dominance across replacement therapy</p>
+      <p class="fig-note">80%+ female share of replacement therapy</p>
     </li><li>
       <div class="fig-row">
         <p class="fig-label">Aesthetic procedures</p>
         <p class="share">90%</p>
       </div>
       <div class="track thin"><div class="fill forest" style="width:90%"></div></div>
-      <p class="fig-note">85–95% of non-surgical interventions annually</p>
+      <p class="fig-note">85–95% of non-surgical procedures</p>
     </li></ul>
     </div>
   </section>
