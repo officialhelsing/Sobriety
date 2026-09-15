@@ -1,714 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Composite Exogenous Load</title>
-<meta name="description" content="An Epidemiological Examination of Sex-Differentiated Psychotropic, Endocrine, and Ideological Markers">
-<meta name="theme-color" content="#f3efe6">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
-<style>
-  :root {
-    --paper: #f3efe6;
-    --paper-raised: #faf7f0;
-    --paper-inset: #eae4d6;
-    --ink: #1b1814;
-    --ink-muted: #5c564e;
-    --ink-subtle: #8a8278;
-    --rule: #d4cdc0;
-    --rule-strong: #b9b1a3;
-    --forest: #2f473e;
-    --stone: #6b6560;
-    --display: "Fraunces", "Iowan Old Style", Palatino, serif;
-    --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
-  }
-  * { box-sizing: border-box; }
-  html {
-    -webkit-font-smoothing: antialiased;
-    background: var(--paper);
-    color: var(--ink);
-    scroll-behavior: smooth;
-  }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--serif);
-  }
-  ::selection { background: #dce6e0; color: var(--ink); }
-  article {
-    max-width: 64rem;
-    margin: 0 auto;
-    padding: 2.5rem 1rem 6rem;
-  }
-  @media (min-width: 640px) {
-    article { padding: 3rem 2rem 6rem; }
-  }
-  h1 {
-    margin: 0;
-    font-family: var(--display);
-    font-size: clamp(1.7rem, 1.15rem + 1.1vw, 2.05rem);
-    font-weight: 500;
-    line-height: 1.12;
-    letter-spacing: -0.022em;
-    white-space: nowrap;
-  }
-  .subtitle {
-    margin: 0.75rem 0 0;
-    font-family: var(--display);
-    font-size: clamp(0.7rem, 0.42rem + 0.5vw, 0.875rem);
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    color: var(--ink-muted);
-    white-space: nowrap;
-  }
-  .stats {
-    margin-top: 2.5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    background: var(--rule);
-  }
-  @media (min-width: 640px) {
-    .stats { grid-template-columns: repeat(4, 1fr); }
-  }
-  .stats > div { background: var(--paper-raised); padding: 1rem; }
-  .stats dt {
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-subtle);
-    white-space: nowrap;
-  }
-  .stats dd {
-    margin: 0.4rem 0 0;
-    font-family: var(--display);
-    font-size: clamp(1.15rem, 1.02rem + 0.45vw, 1.4rem);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-  .stats p {
-    margin: 0.35rem 0 0;
-    font-size: 0.75rem;
-    line-height: 1;
-    color: var(--ink-muted);
-    white-space: nowrap;
-  }
-  #abstract { margin-top: 3.5rem; }
-  .label-rule {
-    margin: 0;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--rule);
-    font-family: var(--display);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-subtle);
-  }
-  .lede {
-    margin: 1.5rem 0 0;
-    font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.2rem);
-    line-height: 1.7;
-    text-align: justify;
-    hyphens: auto;
-  }
-  .figures { margin-top: 4rem; display: grid; gap: 2.5rem; }
-  .kicker {
-    margin: 0;
-    font-family: var(--display);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .kicker.forest, .share { color: var(--forest); }
-  .figures h2, .section-head h2 {
-    margin: 0.25rem 0 0;
-    font-family: var(--display);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-  .figures h2 { font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem); }
-  .section-head h2 {
-    font-size: clamp(1.15rem, 1.02rem + 0.45vw, 1.4rem);
-    line-height: 1.25;
-    white-space: nowrap;
-  }
-  .caption, .fig-note, .note { color: var(--ink-muted); }
-  .figures > div > p {
-    margin: 0.5rem 0 0;
-    font-size: 0.875rem;
-    text-align: justify;
-    hyphens: auto;
-    color: var(--ink-muted);
-  }
-  .figures ul { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1.25rem; }
-  .fig-row { display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
-  .fig-label { margin: 0; font-size: 0.875rem; white-space: nowrap; }
-  .fig-note { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--ink-subtle); white-space: nowrap; }
-  .share { margin: 0; font-family: var(--display); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
-  .bars { margin-top: 0.5rem; display: grid; gap: 0.5rem; }
-  @media (min-width: 640px) { .bars { grid-template-columns: 1fr 1fr; } }
-  .bar-meta { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.2rem; }
-  .bar-meta span:first-child { color: var(--ink-subtle); }
-  .bar-meta span:last-child { font-variant-numeric: tabular-nums; }
-  .track { height: 0.5rem; overflow: hidden; border-radius: 999px; background: var(--paper-inset); }
-  .track.thin { height: 0.375rem; margin-top: 0.4rem; }
-  .fill { height: 100%; border-radius: 999px; }
-  .fill.forest { background: var(--forest); }
-  .fill.stone { background: var(--stone); }
-  .stack { margin-top: 5rem; display: grid; gap: 5rem; }
-  .section-head { padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
-  .blocks { margin-top: 1.5rem; display: grid; gap: 1.25rem; }
-  .body, .muted {
-    margin: 0;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    text-align: justify;
-    hyphens: auto;
-  }
-  .muted { color: var(--ink-muted); }
-  .lead { margin: 0; font-weight: 600; }
-  .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  .items li { border-left: 1px solid var(--rule); padding-left: 1rem; }
-  .items .muted { margin-top: 0.25rem; }
-  .callout {
-    background: var(--paper-raised);
-    border-radius: 0.5rem;
-    padding: 1rem 1.25rem;
-    box-shadow: 0 0 0 1px rgba(27,24,20,0.06), 0 1px 2px -1px rgba(27,24,20,0.06);
-  }
-  .callout .body { margin-top: 0.5rem; }
-  .formula {
-    margin: 0;
-    background: var(--paper-inset);
-    border-radius: 0.5rem;
-    padding: 1.5rem 1.25rem;
-  }
-  .formula .note { margin: 0.75rem 0 0; font-size: 0.875rem; line-height: 1.45; text-align: justify; hyphens: auto; }
-  .table-wrap { margin: 0.5rem 0 0; }
-  .table-wrap figcaption {
-    margin: 0 0 0.75rem;
-    font-size: 0.875rem;
-    color: var(--ink-muted);
-    text-align: justify;
-    hyphens: auto;
-  }
-  .table-scroll { overflow-x: auto; }
-  table { width: 100%; min-width: 48rem; border-collapse: collapse; font-size: 0.875rem; }
-  th {
-    text-align: left;
-    padding: 0.5rem 1rem 0.5rem 0;
-    border-bottom: 1px solid var(--rule-strong);
-    font-family: var(--display);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-subtle);
-  }
-  td { padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-muted); }
-  td.key { font-weight: 600; color: var(--ink); }
-  h3 {
-    margin: 3rem 0 0;
-    font-family: var(--display);
-    font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-  .katex { color: inherit; font-size: 1.05em; }
-  .katex-display { margin: 0; overflow-x: auto; overflow-y: hidden; text-align: center; }
-  @media (max-width: 639px) {
-    h1, .subtitle, .section-head h2 { white-space: normal; }
-  }
-  @media print {
-    body { background: white; }
-    article { max-width: none; padding: 0; }
-    .formula, .callout, .stats > div { background: white; box-shadow: none; }
-  }
-</style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sex Differences in Daily Pharmaceutical Occupancy among U.S. Adults</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet"/>
+<style>:root{--paper:#f6f1e8; --paper-deep:#efe8db; --ink:#1a1714; --ink-soft:#3d3832;--muted:#6e675c; --rule:#d3cbbd; --ox:#7a2e24; --ox-deep:#5c2019;--gilt:#a89068; --female:#7a2e24; --male:#2c3a4a;--display:"Cormorant Garamond",Palatino,serif;--body:"Source Serif 4",Georgia,serif;}*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}body{margin:0;font-family:var(--body);background:var(--paper);background-image:radial-gradient(circle at 18% 12%, color-mix(in srgb,var(--rule) 28%,transparent) 0 1px,transparent 1.4px),radial-gradient(circle at 72% 64%, color-mix(in srgb,var(--ink) 6%,transparent) 0 .8px,transparent 1.2px);background-size:7px 9px,5px 6px}.wrap{display:flex;gap:2.4rem;max-width:72rem;margin:0 auto;padding:2.2rem 1.4rem 4rem}.toc{position:sticky;top:1.4rem;align-self:start;width:13.2rem;flex-shrink:0}.toc h4{margin:0 0 .7rem;font-family:var(--display);font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ox);font-weight:600}.toc a{display:block;color:var(--muted);text-decoration:none;font-size:.78rem;line-height:1.35;padding:.18rem 0}.toc a:hover,.toc a.on{color:var(--ox)}article{min-width:0;flex:1;max-width:42rem}h1{font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,3.4vw,2.35rem);line-height:1.18;margin:0 0 1.1rem;text-align:left}.byline{font-size:.95rem;color:var(--ink-soft);margin:0 0 .15rem;text-align:left}hr.rule{border:0;border-top:1px solid var(--rule);margin:1.5rem 0 0}.kicker{font-family:var(--body);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:2.2rem 0 .7rem}h2{font-family:var(--display);font-size:1.55rem;font-weight:600;margin:2.4rem 0 .75rem;scroll-margin-top:1.2rem;text-align:left}h3{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--ox-deep);margin:1.45rem 0 .45rem;text-align:left}p{text-align:justify;hyphens:auto;line-height:1.7;font-size:1.05rem;margin:0 0 .95em}.drop::first-letter{float:left;font-family:var(--display);font-weight:600;font-size:3.05em;line-height:.9;padding:.06em .12em 0 0;color:var(--ox)}.kw{font-size:.92rem;color:var(--ink-soft);margin-top:1rem;text-align:left}.kw b{font-family:var(--display);color:var(--ox);font-weight:600}figure{margin:2rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.1rem 0 1rem}figcaption{margin-top:.85rem;font-size:.88rem;color:var(--ink-soft);line-height:1.5;text-align:left}figcaption b{color:var(--ox);font-weight:600;margin-right:.35rem}.legend{display:flex;gap:1.1rem;font-size:.75rem;color:var(--ink-soft);margin-bottom:.75rem}.legend i{display:inline-block;width:.7rem;height:.7rem;margin-right:.3rem;vertical-align:-1px}.legend i.f{background:var(--female)}.legend i.m{background:var(--male)}.bars{display:flex;flex-direction:column;gap:.85rem}.bar-row{display:grid;grid-template-columns:8.6rem 1fr;gap:.7rem;align-items:center}.bar-row .lab{font-size:.78rem;color:var(--ink-soft);line-height:1.25}.pair{display:flex;flex-direction:column;gap:.22rem}.line{display:grid;grid-template-columns:1fr 3.2rem;gap:.45rem;align-items:center}.track{height:.72rem;background:color-mix(in srgb,var(--rule) 55%,var(--paper))}.track i{display:block;height:100%}.track i.f,.legend i.f{background:var(--female)}.track i.m,.legend i.m{background:var(--male)}.pair small,.line small{font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums}.year{display:flex;flex-direction:column;gap:.55rem}.yr{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}.track.fat{height:.62rem}.ticks{position:relative}.ticks span{position:absolute;top:0;width:1px;height:100%;background:var(--male)}.methods{margin:1.8rem 0;border:1px solid var(--rule);background:var(--paper-deep);padding:1rem 1.1rem}.methods .kicker{margin:0 0 .55rem}.methods p{font-size:.95rem;margin:0}.tbl-cap{font-size:.88rem;color:var(--ink-soft);margin:1.6rem 0 .35rem;text-align:left}.tbl-cap b{color:var(--ox);margin-right:.35rem}.tbl-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.82rem;margin:0 0 1.1rem}th,td{text-align:left;padding:.42rem .38rem;border-bottom:1px solid var(--rule);vertical-align:top}thead th{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-family:var(--display);font-weight:600;font-size:.78rem}.note{font-size:.78rem;color:var(--muted);margin:-.4rem 0 1.4rem;text-align:left;line-height:1.45}ol.refs{padding-left:1.15rem;color:var(--ink-soft);font-size:.92rem;line-height:1.55}ol.refs li{margin:0 0 .45rem}.menu{display:none}.drawer{display:none}@media(max-width:980px){.toc{display:none}.wrap{padding:1.2rem 1rem 3.2rem}.bar-row{grid-template-columns:1fr}.menu{display:flex;position:fixed;right:1rem;bottom:1rem;z-index:20;width:2.8rem;height:2.8rem;align-items:center;justify-content:center;border:1px solid var(--ox);background:var(--paper);color:var(--ox);cursor:pointer}.drawer{display:none;position:fixed;inset:0;z-index:30}.drawer.open{display:block}.drawer .scrim{position:absolute;inset:0;background:color-mix(in srgb,var(--ink) 40%,transparent)}.drawer nav{position:absolute;top:0;right:0;height:100%;width:min(88vw,18rem);background:var(--paper);border-left:1px solid var(--rule);padding:1.1rem;overflow:auto}}@media print{.toc,.menu,.drawer{display:none!important}.wrap{display:block;padding:0}article{max-width:none}}</style>
 </head>
 <body>
+<button class="menu" id="menuBtn" aria-label="Contents">≡</button>
+<div class="drawer" id="drawer">
+  <div class="scrim" id="scrim"></div>
+  <nav>
+    <h4 style="font-family:var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--ox);font-size:.72rem">Contents</h4>
+    <a href="#abstract">Abstract</a>
+<a href="#s1">1. Introduction</a>
+<a href="#s2">2. Sources and algebra</a>
+<a href="#s3">3. Tier 1 endocrine</a>
+<a href="#s4">4. Tier 2 shared classes</a>
+<a href="#s5">5. Envelope and sensitivity</a>
+<a href="#s6">6. Ages 18–44</a>
+<a href="#s7">7. Objections</a>
+<a href="#s8">8. Limits</a>
+<a href="#s9">9. What the sign means</a>
+<a href="#s10">10. Conclusion</a>
+<a href="#refs">References</a>
+  </nav>
+</div>
+<div class="wrap">
+<aside class="toc">
+  <h4>Contents</h4>
+  <a href="#abstract">Abstract</a>
+<a href="#s1">1. Introduction</a>
+<a href="#s2">2. Sources and algebra</a>
+<a href="#s3">3. Tier 1 endocrine</a>
+<a href="#s4">4. Tier 2 shared classes</a>
+<a href="#s5">5. Envelope and sensitivity</a>
+<a href="#s6">6. Ages 18–44</a>
+<a href="#s7">7. Objections</a>
+<a href="#s8">8. Limits</a>
+<a href="#s9">9. What the sign means</a>
+<a href="#s10">10. Conclusion</a>
+<a href="#refs">References</a>
+</aside>
 <article>
-  <header>
-    <h1>Demographic Divergence in Composite Exogenous Burden</h1>
-    <p class="subtitle">An Epidemiological Examination of Sex-Differentiated Psychotropic, Endocrine, and Ideological Markers</p>
-    <dl class="stats"><div>
-      <dt>NHIS 2024</dt>
-      <dd>2.1 : 1</dd>
-      <p>F:M psychotropic ratio</p>
-    </div><div>
-      <dt>NSFG 2022–24</dt>
-      <dd>55%</dd>
-      <p>Contraception, 15–49</p>
-    </div><div>
-      <dt>Section 20</dt>
-      <dd><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span></dd>
-      <p>Daily Rx weight</p>
-    </div><div>
-      <dt>Section 20</dt>
-      <dd><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0.06</span></span></span></span></dd>
-      <p>Weekly binge weight</p>
-    </div></dl>
-    <section id="abstract">
-      <h2 class="label-rule">Abstract</h2>
-      <p class="lede">Conventional public health metrics define sobriety through the narrow aperture of acute ethanol and illicit drug abstinence. This paper proposes an expanded baseline of somatic and cognitive autonomy, operationalized as the relative absence of exogenous neuroendocrine modulators, chronic psychopharmaceuticals, substance dependence, and high-salience institutional narrative alignment. Synthesizing cross-sectional and longitudinal data from the National Health Interview Survey (NHIS), the National Health and Nutrition Examination Survey (NHANES), and the National Survey on Drug Use and Health (NSDUH), this study evaluates the hypothesis that adult males demonstrate higher per capita net sobriety than females within contemporary American demographics. While males historically exhibit higher rates of heavy alcohol consumption and cannabis use, recent cohort trends indicate a rapid narrowing of these gaps among younger populations alongside a persistent two-fold female excess in antidepressant prescription rates and continuous hormonal contraceptive exposure. The findings reveal an asymmetric distribution of continuous pharmacological intervention that fundamentally alters baseline neurochemistry and metabolic equilibrium, providing empirical support for a sex-differentiated asymmetry in composite exogenous load.</p>
-    </section>
-  </header>
-
-  <section class="figures" aria-label="Key figures">
-    <div>
-      <p class="kicker">Figure 1</p>
-      <h2>Prevalence by sex</h2>
-      <p>Female rates in forest; male rates in stone. Continuous pharmacological vectors remain female-skewed; episodic binge drinking retains a residual male excess after age 26.</p>
-      <ul><li>
-      <div class="fig-row">
-        <p class="fig-label">Mental health prescriptions</p>
-        <p class="fig-note">NHIS 2024 · past 12 months</p>
-      </div>
-      <div class="bars">
-        <div>
-          <div class="bar-meta"><span>Female</span><span>24.9%</span></div>
-          <div class="track"><div class="fill forest" style="width:100%"></div></div>
-        </div>
-        <div>
-          <div class="bar-meta"><span>Male</span><span>13.4%</span></div>
-          <div class="track"><div class="fill stone" style="width:53.81526104417671%"></div></div>
-        </div>
-      </div>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">Antidepressant pharmacotherapy</p>
-        <p class="fig-note">NHIS 2023 · daily agents</p>
-      </div>
-      <div class="bars">
-        <div>
-          <div class="bar-meta"><span>Female</span><span>15.3%</span></div>
-          <div class="track"><div class="fill forest" style="width:100%"></div></div>
-        </div>
-        <div>
-          <div class="bar-meta"><span>Male</span><span>7.4%</span></div>
-          <div class="track"><div class="fill stone" style="width:48.36601307189542%"></div></div>
-        </div>
-      </div>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">Class III obesity (BMI ≥ 40)</p>
-        <p class="fig-note">NHANES 2021–2023</p>
-      </div>
-      <div class="bars">
-        <div>
-          <div class="bar-meta"><span>Female</span><span>12.1%</span></div>
-          <div class="track"><div class="fill forest" style="width:100%"></div></div>
-        </div>
-        <div>
-          <div class="bar-meta"><span>Male</span><span>6.9%</span></div>
-          <div class="track"><div class="fill stone" style="width:57.024793388429764%"></div></div>
-        </div>
-      </div>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">Past-month binge drinking, 26+</p>
-        <p class="fig-note">NSDUH · remaining male excess</p>
-      </div>
-      <div class="bars">
-        <div>
-          <div class="bar-meta"><span>Female</span><span>20.2%</span></div>
-          <div class="track"><div class="fill forest" style="width:79.52755905511812%"></div></div>
-        </div>
-        <div>
-          <div class="bar-meta"><span>Male</span><span>25.4%</span></div>
-          <div class="track"><div class="fill stone" style="width:100%"></div></div>
-        </div>
-      </div>
-    </li></ul>
-    </div>
-    <div>
-      <p class="kicker">Figure 2</p>
-      <h2>Female share of continuous load</h2>
-      <p>Vectors with no meaningful male population counterpart, or with large female majorities in treated cohorts.</p>
-      <ul><li>
-      <div class="fig-row">
-        <p class="fig-label">Exogenous steroids</p>
-        <p class="share">100%</p>
-      </div>
-      <div class="track thin"><div class="fill forest" style="width:100%"></div></div>
-      <p class="fig-note">~55% of females 15–49; no male counterpart</p>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">GLP-1 weight-loss cohort</p>
-        <p class="share">74%</p>
-      </div>
-      <div class="track thin"><div class="fill forest" style="width:74%"></div></div>
-      <p class="fig-note">70–79% of weight-loss prescriptions</p>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">Levothyroxine users</p>
-        <p class="share">84%</p>
-      </div>
-      <div class="track thin"><div class="fill forest" style="width:84%"></div></div>
-      <p class="fig-note">80%+ female share of replacement therapy</p>
-    </li><li>
-      <div class="fig-row">
-        <p class="fig-label">Aesthetic procedures</p>
-        <p class="share">90%</p>
-      </div>
-      <div class="track thin"><div class="fill forest" style="width:90%"></div></div>
-      <p class="fig-note">85–95% of non-surgical procedures</p>
-    </li></ul>
-    </div>
-  </section>
-
-  <div class="stack">
-    <section id="introduction">
-    <header class="section-head">
-      
-      <h2>Introduction</h2>
-    </header>
-    <div class="blocks"><p class="body">The assessment of population-level sobriety has long suffered from a restrictive conceptualization, focusing predominantly on acute intoxication events caused by alcohol and scheduled narcotics. Such frameworks fail to capture the physiological and cognitive realities of the modern somatic landscape, wherein millions of individuals maintain continuous, multi-decade exposures to synthetic endocrine disruptors, mood-altering psychotropics, and highly refined dietary inputs. To construct a rigorous comparative analysis of male versus female cognitive and metabolic autonomy, the operational definition of sobriety must expand beyond simple breathalyzer thresholds to encompass the total burden of chemical, hormonal, and structural maintenance imposed upon the individual substrate.</p><p class="body">Under this expanded rubric, the hypothesis of superior male per capita sobriety rests upon the structural asymmetry of continuous pharmacological intervention. While historical epidemiological surveys positioned males as the primary vectors of substance-induced impairment, contemporary longitudinal metrics reveal a nuanced inversion. The widespread clinical application of selective serotonin reuptake inhibitors (SSRIs), coupled with continuous exogenous hormone administration via oral and long-acting reversible contraceptives, creates a baseline state of neurochemical alteration among females that lacks a male quantitative equivalent. Concurrently, historical male dominance in ethanol and cannabis consumption shows marked attenuation across younger cohorts, reducing the differential impact of recreational intoxicants. This paper systematically interrogates these physiological, metabolic, and ideological domains to measure the aggregate exogenous load across sexes, providing a comprehensive empirical audit of population-level cognitive independence.</p></div>
-  </section>
-    <section id="s1">
-    <header class="section-head">
-      <p class="kicker forest">01</p>
-      <h2>Ontological Critique of Legacy Sobriety Metrics</h2>
-    </header>
-    <div class="blocks"><p class="body">Epidemiological inquiries into population-level sobriety historically operate under a narrow binary paradigm. Traditional metrics prioritize acute impairment driven by ethanol intoxication or active illicit substance toxicity, relying on blood alcohol concentration thresholds or standardized urine toxicology panels. This analytical framework leaves a profound structural blind spot regarding continuous, sub-acute physiological and neurochemical modulations that alter human cognition and metabolic baselines on a daily, decade-spanning timeline.</p><p class="body">To correct this diagnostic limitation, this monograph introduces the framework of Composite Exogenous Load. Composite Exogenous Load measures the aggregate presence of non-endogenous chemical, hormonal, and psychotropic modulators acting upon a given demographic cohort. The core axiom of this construct dictates that genuine somatic and cognitive autonomy requires an unmediated physiological baseline. When an individual maintains daily exposure to exogenous agents, whether selective serotonin reuptake inhibitors, synthetic progestins, or severe ultra-processed dietary disruptors, their underlying neurochemical homeostasis is continuously displaced. A population characterized by sustained, multi-variable pharmaceutical maintenance possesses a higher structural departure from unmediated sobriety than a cohort exhibiting stochastic, episodic recreational substance intake.</p></div>
-  </section><section id="s2">
-    <header class="section-head">
-      <p class="kicker forest">02</p>
-      <h2>Scope, Methodology, and Surveillance Provenance</h2>
-    </header>
-    <div class="blocks"><p class="body">Evaluating the hypothesis that adult males maintain higher per capita net sobriety than adult females requires synthesizing high-fidelity, cross-sectional, and longitudinal public health surveillance datasets from 2021 through 2025. This study aggregates national data across four primary domain vectors:</p><ul class="items"><li>
-            <p class="lead">Neuropharmaceutical and Psychotropic Surveillance.</p>
-            <p class="muted">Derived from the National Health Interview Survey (NHIS, 2021 to 2024 cycles), tracking prescribed psychiatric medication utilization, depression treatment rates, and diagnostic distributions across sex, age, and racial demographics.</p>
-          </li><li>
-            <p class="lead">Endocrine and Synthetic Contraceptive Surveillance.</p>
-            <p class="muted">Formulated via the Centers for Disease Control and Prevention (CDC) Division of Reproductive Health and Guttmacher Institute surveillance repositories, capturing current and lifetime exposure to oral contraceptives, hormonal intrauterine devices, subdermal implants, and systemic progestin modulators among females aged 15 to 49.</p>
-          </li><li>
-            <p class="lead">Recreational and Psychoactive Substance Surveillance.</p>
-            <p class="muted">Sourced from the National Survey on Drug Use and Health (NSDUH, 2023 to 2025 data releases), examining past-month binge drinking prevalence, heavy alcohol consumption, past-year cannabis usage rates, and clinical substance use disorder diagnostics.</p>
-          </li><li>
-            <p class="lead">Metabolic and Dietary Disruption Surveillance.</p>
-            <p class="muted">Extracted from the National Health and Nutrition Examination Survey (NHANES, 2021 to 2023 analysis), monitoring body mass index distribution, severe obesity prevalence, and ultra-processed food caloric ratios.</p>
-          </li></ul><p class="body">Data are systematically stratified across three primary age cohorts (18 to 25 years, 26 to 49 years, and 50 years and older) to isolate persistent longitudinal trends from transient generational shifts. The empirical weighting assigns superior magnitude to continuous daily pharmacological inputs relative to periodic recreational events, reflecting their continuous, non-stochastic suppression of unmediated baseline neurochemistry.</p></div>
-  </section><section id="s3">
-    <header class="section-head">
-      <p class="kicker forest">03</p>
-      <h2>Domain I — Quantitative Asymmetries in Neuropharmaceutical Prescriptions</h2>
-    </header>
-    <div class="blocks"><p class="body">Empirical examination of psychotropic surveillance metrics reveals the most pronounced, statistically robust sex asymmetry within the Composite Exogenous Load framework. Data from successive iterations of the National Health Interview Survey (NHIS) establish a consistent, population-scale disparity in prescription psychiatric medication intake, characterized by a persistent female-to-male ratio of approximately two to one.</p><aside class="callout">
-        <p class="kicker forest">NHIS 2024</p>
-        <p class="body">24.9 percent of adult females reported receiving prescription medication for mental health management within the preceding twelve months, compared to 13.4 percent of adult males. Isolating agents for major depressive disorder and generalized anxiety (NHIS 2023): 15.3 percent of females versus 7.4 percent of males.</p>
-      </aside><p class="body">Disaggregation across racial and ethnic cohorts reveals that non-Hispanic White females exhibit the highest absolute prescription rates, with prevalence metrics exceeding 20 percent in targeted age brackets. Longitudinal tracking from 2020 through 2024 indicates that the post-pandemic acceleration in psychotropic dispensing was heavily skewed toward female populations. While prescription volumes among adult males remained comparatively stationary, dispensing rates for adolescent and young adult females experienced sharp upward trajectories. Pharmacologically, these agents, primarily selective serotonin reuptake inhibitors (SSRIs) and serotonin-norepinephrine reuptake inhibitors (SNRIs), induce persistent alterations in synaptic neurotransmitter concentrations, downregulation of central serotonin receptors, and fundamental modifications of hypothalamic-pituitary-adrenal (HPA) axis responsiveness.</p></div>
-  </section><section id="s4">
-    <header class="section-head">
-      <p class="kicker forest">04</p>
-      <h2>Diagnostic Elasticity and Pharmacological Autonomy</h2>
-    </header>
-    <div class="blocks"><p class="body">Evaluating the structural validity of this prescription gap requires addressing whether these figures reflect true underlying physiological pathology or artifacts of clinical diagnostic elasticity. Health-seeking behaviors display well-documented sex disparities, with females demonstrating higher rates of primary care utilization, psychological screening participation, and symptom self-reporting. Consequently, clinical encounters involving female patients carry a higher probability of culminating in a pharmaceutical prescription.</p><p class="body">Within the framework of Composite Exogenous Load, however, the diagnostic origin does not alter the somatic outcome. Regardless of whether a prescription is driven by endogenous neurochemical dysfunction, socio-cultural distress, or diagnostic expansion, the resultant neurochemical state remains altered. The continuous introduction of synthetic psychotropics shifts baseline somatic functioning away from unmediated biology. Thus, the numerical excess of female prescription volume forms an unambiguous foundation for higher per capita chemical intervention within the female demographic.</p></div>
-  </section><section id="s5">
-    <header class="section-head">
-      <p class="kicker forest">05</p>
-      <h2>Domain II — Exogenous Steroidal Load and Synthetic Progestin Surveillance</h2>
-    </header>
-    <div class="blocks"><p class="body">In evaluating systemic departures from an unmediated somatic baseline, exogenous endocrine alteration represents a profound, sex-exclusive dimension of Composite Exogenous Load. While psychiatric medications modulate central monoaminergic pathways, synthetic steroidal agents introduce chronic, high-affinity systemic overrides to endogenous endocrine architecture. Within contemporary public health datasets, population-scale exposure to exogenous sex steroids is concentrated almost entirely within the female demographic.</p><p class="body">Surveillance data from the Centers for Disease Control and Prevention National Survey of Family Growth (NSFG, 2022 to 2024 cycles) and supplementary epidemiological tracking from the Guttmacher Institute establish that between 54.3 and 57.0 percent of females aged 15 to 49 maintain active contraceptive usage. Combined oral contraceptive preparations, utilizing synthetic ethinyl estradiol alongside diverse progestin generations, account for 11.4 percent of the total female reproductive-age population (comprising approximately 23 percent of active contraceptive users). Long-acting reversible contraceptives (LARCs), including levonorgestrel-releasing intrauterine devices and etonogestrel subdermal implants, constitute an additional 10.5 percent of population exposure, supplemented by depot medroxyprogesterone acetate injections and transdermal systemic delivery systems. Males possess no quantitative or systemic counterpart to this chronic steroidal exposure at population scale.</p></div>
-  </section><section id="s6">
-    <header class="section-head">
-      <p class="kicker forest">06</p>
-      <h2>Neuroendocrine Axis Modulation and Somatic Baseline Suppression</h2>
-    </header>
-    <div class="blocks"><p class="body">The physiological ramifications of continuous exogenous steroid administration extend far beyond peripheral reproductive tissue suppression. Synthetic estrogens and progestins operate via potent negative feedback loops upon the hypothalamic-pituitary-gonadal (HPG) axis, systematically arresting endogenous luteinizing hormone and follicle-stimulating hormone secretion. This sustained inhibition truncates natural cyclic surges of estradiol and suppresses endogenous progesterone production, replacing dynamic biological oscillations with static concentrations of synthetic analogs.</p><p class="body">Beyond HPG axis suppression, synthetic progestins exert cross-talk influences upon the hypothalamic-pituitary-adrenal (HPA) axis and central neurosteroid pathways. Endogenous progesterone readily metabolizes into allopregnanolone, a crucial positive allosteric modulator of gamma-aminobutyric acid type A (GABA-A) receptors that governs affective stability and central nervous system stress buffering. Synthetic progestins lack the capacity to convert into allopregnanolone, frequently altering baseline GABAergic tone, flattening diurnal cortisol rhythms, and modifying stress-response trajectories. When layered alongside SSRI regimens, this continuous exogenous hormone burden creates a state of compound pharmaceutical intervention that significantly shifts baseline female somatic functioning away from an unmediated state.</p></div>
-  </section><section id="s7">
-    <header class="section-head">
-      <p class="kicker forest">07</p>
-      <h2>Domain III — Recreational Substance Dynamics: Ethanol Consumption and Binge Profiles</h2>
-    </header>
-    <div class="blocks"><p class="body">Recreational intoxication metrics present a contrasting vector to the continuous pharmaceutical burdens analyzed in preceding domains. Sourced from the National Survey on Drug Use and Health (NSDUH, 2023 to 2025 releases), ethanol surveillance demonstrates that adult males historically maintain higher absolute rates of episodic binge drinking and heavy alcohol consumption across aggregate population totals.</p><p class="body">In the general adult population aged 26 and older, males report past-month binge drinking rates of approximately 25.4 percent, compared to 20.2 percent among females. Heavy alcohol use metrics similarly skew toward males, who exhibit higher rates of alcohol-related emergency department presentations and severe alcohol use disorder diagnoses in mature cohorts. However, age-stratified cross-sectional analysis reveals a profound structural shift among younger demographics. Within the 18 to 25 age bracket, historical male dominance in ethanol consumption has largely collapsed. Multiple surveillance waves indicate parity in past-month binge drinking between young males and females, with female rates equalling or slightly exceeding male rates in specific undergraduate and urban sub-demographics.</p></div>
-  </section><section id="s8">
-    <header class="section-head">
-      <p class="kicker forest">08</p>
-      <h2>Divergent Intoxication Kinetics: Stochastic Events versus Steady-State Maintenance</h2>
-    </header>
-    <div class="blocks"><p class="body">Integrating ethanol dynamics into the Composite Exogenous Load framework requires a rigorous pharmacokinetic distinction between acute, episodic intoxication and continuous pharmaceutical maintenance. Alcohol ingestion represents a stochastic event governed by rapid zero-order clearance kinetics, hepatic oxidation via alcohol dehydrogenase, and transient central nervous system suppression primarily mediated through acute GABA-A receptor potentiation.</p><p class="body">Unlike psychotropic pharmaceuticals or synthetic endocrine suppressors, ethanol clearance permits the physical substrate to return to an unmediated baseline following metabolic processing. A male who engages in periodic binge drinking experiences episodic spikes in blood alcohol concentration separated by extended intervals of unmediated physiological functioning. Conversely, daily administration of selective serotonin reuptake inhibitors or synthetic progestins creates steady-state plasma concentrations, maintaining perpetual receptor occupancy and continuous suppression of native neurochemical oscillations. While male populations retain higher volumetric ethanol exposure in mature age bands, the transient nature of episodic alcohol intake operates as a distinct metabolic phenomenon compared to the non-stop, steady-state pharmacological maintenance characteristic of contemporary female exposure vectors.</p></div>
-  </section><section id="s9">
-    <header class="section-head">
-      <p class="kicker forest">09</p>
-      <h2>Domain IV — Cannabis Surveillance and Age-Stratified Convergence</h2>
-    </header>
-    <div class="blocks"><p class="body">Cannabinoid exposure constitutes a primary recreational vector within contemporary epidemiological literature. Data derived from the National Survey on Drug Use and Health (NSDUH, 2023 to 2025 cycles) confirm that adult males historically exhibit higher absolute rates of past-year and past-month cannabis consumption, alongside elevated prevalence of diagnostic cannabis use disorder.</p><p class="body">In mature adult demographics aged 26 and older, male prevalence of past-year cannabis use ranges between 24 and 28 percent, whereas female prevalence remains within the 18 to 22 percent interval. Furthermore, clinical diagnoses of cannabis use disorder continue to skew toward male populations in older age strata. However, rigorous age-stratified disaggregation demonstrates a striking structural convergence among younger cohorts. Within adolescent (ages 12 to 17) and young adult (ages 18 to 25) populations, historical male excess has largely dissolved. Recent surveillance waves reveal that young females match or exceed their male counterparts in past-month use, frequency of daily or near-daily administration, and early-onset dependency markers.</p></div>
-  </section><section id="s10">
-    <header class="section-head">
-      <p class="kicker forest">10</p>
-      <h2>Cannabinoid Kinetics and Comparative Substrate Modulation</h2>
-    </header>
-    <div class="blocks"><p class="body">Evaluating delta-9-tetrahydrocannabinol (THC) exposure within the Composite Exogenous Load model requires assessing central nervous system receptor binding dynamics and neuroadaptation profiles. THC acts as a partial agonist at central cannabinoid type 1 (CB1) receptors, modulating retrograde synaptic signaling across GABAergic and glutamatergic pathways.</p><p class="body">While chronic daily cannabis administration induces substantial CB1 receptor downregulation and neurocognitive tolerance, sporadic or moderate recreational usage maintains a distinct pharmacokinetic profile compared to steady-state pharmaceutical maintenance. The clearance of lipophilic cannabinoid metabolites, while prolonged relative to water-soluble compounds, follows progressive elimination kinetics that permit receptor resensitization during abstinent intervals. Consequently, while mature male populations maintain higher volumetric cannabis exposure, the rapid acceleration of female consumption in younger cohorts, combined with the episodic nature of recreational intake relative to daily psychotropic and endocrine prescriptions, reinforces the core thesis: recreational substance metrics show partial demographic convergence, whereas pharmaceutical and endocrine interventions remain heavily female-skewed.</p></div>
-  </section><section id="s11">
-    <header class="section-head">
-      <p class="kicker forest">11</p>
-      <h2>Domain V — Metabolic Infrastructure and Dietary Disruption</h2>
-    </header>
-    <div class="blocks"><p class="body">Evaluating somatic integrity within the Composite Exogenous Load framework requires assessing metabolic infrastructure and nutritional intake profiles. Data extracted from the National Health and Nutrition Examination Survey (NHANES, 2021 to 2023 cycles) indicate that ultra-processed foods constitute approximately 53 to 58 percent of total daily caloric intake among American adults. These industrial formulations, high in refined carbohydrates, emulsifiers, synthetic preservatives, and packaging-derived endocrine disruptors such as phthalates and bisphenols, exert continuous systemic stress upon human metabolic pathways. At the aggregate population level, the total caloric share derived from ultra-processed inputs displays near parity between sexes, establishing ultra-processed food exposure as a broad background vector affecting both male and female physiology without significant demographic divergence.</p></div>
-  </section><section id="s12">
-    <header class="section-head">
-      <p class="kicker forest">12</p>
-      <h2>Severe Obesity Stratification and Endocrine Cross-Talk</h2>
-    </header>
-    <div class="blocks"><p class="body">Demographic divergence becomes evident upon analyzing severe metabolic dysregulation, specifically Class III obesity defined by a body mass index equal to or exceeding 40. NHANES surveillance establishes that severe obesity prevalence among females reaches approximately 12.1 percent, compared to 6.9 percent among males.</p><p class="body">Adipose tissue operates as a complex, active endocrine organ rather than a passive energy storage depot. Pathological excess of visceral and subcutaneous adipose tissue drives elevated peripheral aromatase activity, which catalyzes the peripheral conversion of circulating androgens into estrogens while simultaneously secreting pro-inflammatory cytokines such as interleukin-6 and tumor necrosis factor-alpha. Consequently, elevated rates of severe obesity within the female population introduce a secondary layer of biological endocrine dysregulation and systemic metabolic strain. This physiological burden reinforces the structural asymmetry established across neuropharmaceutical and synthetic hormone vectors.</p></div>
-  </section><section id="s13">
-    <header class="section-head">
-      <p class="kicker forest">13</p>
-      <h2>Domain VI — Institutional Narrative Amplification and Ideological Capture Proxies</h2>
-    </header>
-    <div class="blocks"><p class="body">Quantifying cognitive autonomy within the Composite Exogenous Load model requires assessing population-level exposure to standardized institutional narrative frameworks. While neurochemical and synthetic endocrine inputs represent physical vectors of exogenous load, high-salience ideological alignment serves as an empirical proxy for external conditioning transmitted via academic institutions, media apparatuses, and administrative governance structures.</p><p class="body">Public opinion surveillance datasets, including multi-decade longitudinal tracking from Gallup and the Pew Research Center, demonstrate a widening demographic divergence in ideological self-identification. Female populations, particularly individuals within the 18 to 29 age cohort, exhibit pronounced leftward political movement relative to male peers. Recent survey cycles reveal that self-identified liberal ideology among young women has escalated to historical peaks, creating a structural gap compared to young males who display more centrist or traditional ideological distributions. This demographic divergence tracks directly with higher rates of female matriculation in tertiary education and administrative employment, environments where dominant institutional narrative paradigms operate with maximum density.</p></div>
-  </section><section id="s14">
-    <header class="section-head">
-      <p class="kicker forest">14</p>
-      <h2>Institutional Trust, Diagnostic Receptivity, and Cognitive Homogeneity</h2>
-    </header>
-    <div class="blocks"><p class="body">Within the architecture of Composite Exogenous Load, ideological capture is analyzed as a structural indicator of susceptibility to top-down institutional conditioning. High alignment with institutional narrative paradigms correlates strongly with elevated trust in medical authority systems, heightened diagnostic self-attribution, and lower resistance to therapeutic intervention.</p><p class="body">Sociological cross-analyses indicate that cohorts demonstrating high institutional trust display greater willingness to internalize formal psychiatric categories, accelerating the conversion of existential or environmental distress into clinical diagnoses. This dynamic creates a compounding feedback loop: ideological alignment reinforces diagnostic engagement, which directly increases psychotropic prescription rates and continuous daily medication. Consequently, the female demographic&#39;s elevated alignment with dominant academic and administrative narrative structures functions as both a cognitive proxy for non-autonomous conditioning and a primary behavioral vector driving neuropharmaceutical usage.</p></div>
-  </section><section id="s15">
-    <header class="section-head">
-      <p class="kicker forest">15</p>
-      <h2>Structural Synthesis of Multi-Vector Somatic Load</h2>
-    </header>
-    <div class="blocks"><p class="body">Synthesizing the multi-domain vectors of Composite Exogenous Load requires constructing an integrated somatic baseline model. When psychotropic prescriptions, exogenous steroidal maintenance, recreational substance consumption, metabolic dysregulation, and ideological alignment proxies are evaluated concurrently, a decisive demographic asymmetry emerges.</p><p class="body">Rather than assessing isolated behaviors independently, systemic evaluation examines polypharmacy and compound somatic burden. A significant proportion of adult females, particularly within Western developed nations, maintain concurrent exposure to selective serotonin reuptake inhibitors alongside synthetic hormonal contraceptives. This dual-exposure state represents a structural compound intervention wherein hypothalamic-pituitary-adrenal, hypothalamic-pituitary-gonadal, and central monoaminergic signaling pathways are simultaneously displaced from native homeostasis. In contrast, while adult males exhibit higher volumetric rates of episodic alcohol and cannabis consumption in mature age brackets, these recreational inputs function primarily as stochastic events with discrete metabolic clearance windows. The cumulative somatic architecture of the female demographic is thus defined by persistent, steady-state pharmacological management, creating a structurally lower baseline of unmediated physiological autonomy.</p></div>
-  </section><section id="s16">
-    <header class="section-head">
-      <p class="kicker forest">16</p>
-      <h2>Age Cohort Interaction Dynamics</h2>
-    </header>
-    <div class="blocks"><p class="body">The validity of the Composite Exogenous Load hypothesis varies systematically when stratified across specific age cohorts:</p><ul class="items"><li>
-            <p class="lead">Young Adult Cohort (Ages 18 to 25).</p>
-            <p class="muted">This demographic demonstrates the strongest empirical support for the hypothesis. Within this cohort, historical male excesses in alcohol and cannabis consumption have reached near-total parity or slight female reversal. Concurrently, young females exhibit the steepest longitudinal increases in mental health medication dispensing, the highest density of synthetic contraceptive reliance, and the most pronounced leftward ideological divergence.</p>
-          </li><li>
-            <p class="lead">Middle Adult Cohort (Ages 26 to 49).</p>
-            <p class="muted">This stratum exhibits high absolute pharmaceutical load among females combined with sustained, though narrowing, male volumetric recreational substance use. The ongoing daily steroidal and psychotropic burden in females maintains a substantial structural gap in unmediated somatic baseline, despite persistent male alcohol metrics.</p>
-          </li><li>
-            <p class="lead">Older Adult Cohort (Ages 50 and older).</p>
-            <p class="muted">In this cohort, legacy patterns of higher male alcohol-related morbidity and heavy substance use partially offset the persistent female prescription gap. However, psychotropic medication usage among mature females remains elevated, sustaining a prominent continuous pharmaceutical footprint.</p>
-          </li></ul><p class="body">Across the primary reproductive and socio-economically active age brackets (18 to 49), the continuous nature of pharmaceutical and endocrine interventions yields a net metric favoring higher male unmediated sobriety.</p></div>
-  </section><section id="s17">
-    <header class="section-head">
-      <p class="kicker forest">17</p>
-      <h2>Falsification Parameters and Sensitivity Analysis</h2>
-    </header>
-    <div class="blocks"><p class="body">Rigorous empirical evaluation of the Composite Exogenous Load hypothesis requires establishing explicit parameters under which the model would be weakened or falsified. Because the thesis relies upon the mathematical preponderance of continuous pharmacological maintenance, specific demographic or clinical shifts would systematically invert the overall somatic balance:</p><ul class="items"><li>
-            <p class="lead">Convergence of Psychotropic Prescription Gaps.</p>
-            <p class="muted">A persistent reduction in the historical two-to-one female-to-male ratio for prescription antidepressants, anxiolytics, and sedative-hypnotics toward quantitative parity would significantly erode the pharmaceutical foundation of the model.</p>
-          </li><li>
-            <p class="lead">Mass Adoption of Male Endocrine Modulators.</p>
-            <p class="muted">The development, regulatory approval, and widespread population adoption of exogenous male hormonal contraceptives, or a surge in therapeutic testosterone replacement reaching equivalent prevalence among reproductive-age males, would introduce a comparable continuous steroidal burden to the male demographic.</p>
-          </li><li>
-            <p class="lead">Resurgence of Male Recreational Divergence.</p>
-            <p class="muted">A dramatic re-widening of historical sex gaps in ethanol bingeing and chronic cannabis consumption among younger cohorts (ages 18 to 25), accompanied by a decline in female recreational substance usage, would re-establish episodic intoxication as a dominant male-skewed differentiator.</p>
-          </li><li>
-            <p class="lead">Reversal of Autoimmune and Metabolic Prescriptions.</p>
-            <p class="muted">A systemic inversion in the prescription rates of GLP-1 receptor mimetics, levothyroxine, targeted anti-inflammatory biologics, or acute migraine therapies away from female predominance would reduce the secondary pharmacological load currently observed.</p>
-          </li></ul></div>
-  </section><section id="s18">
-    <header class="section-head">
-      <p class="kicker forest">18</p>
-      <h2>Methodological Caveats, Diagnostic Elasticity, and Clinical Nuance</h2>
-    </header>
-    <div class="blocks"><p class="body">A comprehensive epidemiological audit must address alternative explanations for the observed data. Opposing interpretations frequently attribute higher female prescription volumes to differential help-seeking behaviors, reduced stigma surrounding mental health disclosure, and higher rates of routine medical surveillance during reproductive clinical visits. Furthermore, biological theories posit an intrinsically higher susceptibility to affective disorders in females due to natural cyclic endocrine fluctuations.</p><p class="body">Within the formal architecture of Composite Exogenous Load, however, diagnostic justification does not negate physiological alterity. Whether a pharmaceutical protocol is initiated to correct an endogenous neurotransmitter deficiency, alleviate clinical distress, or treat a systemic autoimmune pathology, the resulting neurochemical state is chemically altered. The physical substrate experiences sustained receptor occupation, modified signal transduction pathways, and suppressed native hormonal rhythms regardless of clinical intent. Consequently, while help-seeking disparities account for how prescriptions are generated, they do not alter the aggregate physiological reality: females maintain a substantially higher continuous pharmacological exposure at population scale.</p></div>
-  </section><section id="s19">
-    <header class="section-head">
-      <p class="kicker forest">19</p>
-      <h2>Cross-Demographic Matrix of Composite Exogenous Load Vectors</h2>
-    </header>
-    <div class="blocks"><figure class="table-wrap">
-        <figcaption>Table 1. Composite exogenous load vectors by sex ratio, kinetic profile, and somatic contribution.</figcaption>
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>Domain Vector</th><th>Target Pathways</th><th>Sex Ratio (F:M)</th><th>Pharmacokinetic Profile</th><th>Net Somatic Load</th></tr></thead>
-            <tbody>
-              <tr><td class="key">Exogenous Steroids &amp; Progestins</td><td class="">HPG axis suppression, GABA-A neurosteroid modulation</td><td class="">Solely female (~55% of ages 15–49)</td><td class="">Steady-state continuous synthetic binding</td><td class="">Maximum baseline displacement via continuous hormonal override</td></tr><tr><td class="key">SSRIs &amp; SNRIs</td><td class="">Central monoamine transporter blockade, 5-HT receptor downregulation</td><td class="">~2.1 : 1 (24.9% F vs 13.4% M, NHIS 2024)</td><td class="">Steady-state continuous synaptic alteration</td><td class="">High baseline displacement via continuous CNS modulation</td></tr><tr><td class="key">Benzodiazepines &amp; Z-Drugs</td><td class="">GABA-A receptor allosteric potentiation, sleep architecture modification</td><td class="">~1.6 : 1 (elevated chronic female dispensing)</td><td class="">Intermittent to daily steady-state maintenance</td><td class="">High neurochemical alteration; prolonged female drug clearance</td></tr><tr><td class="key">GLP-1 Receptor Agonists</td><td class="">Central satiety signaling, delayed gastric emptying, insulin/glucagon modulation</td><td class="">~3.5 : 1 (70–79% female weight-loss cohort share)</td><td class="">Weekly steady-state peptide receptor activation</td><td class="">High continuous metabolic and hypothalamic reward modification</td></tr><tr><td class="key">Thyroid Replacement (Levothyroxine)</td><td class="">Basal metabolic rate regulation, cardiac adrenergic sensitivity</td><td class="">~5.0 : 1 to 8.0 : 1 (80% female user dominance)</td><td class="">Daily continuous hormone replacement</td><td class="">High systemic metabolic and pituitary feedback override</td></tr><tr><td class="key">CGRP Antagonists &amp; Pain Agents</td><td class="">Trigeminal neuro-vascular inhibition, prostaglandin synthesis suppression</td><td class="">~3.0 : 1 (migraine and pelvic pain cohorts)</td><td class="">Monthly monoclonal antibody or daily oral intake</td><td class="">Moderate to high localized neuro-inflammatory suppression</td></tr><tr><td class="key">Alcohol (Episodic Heavy Use)</td><td class="">GABA-A potentiation, NMDA inhibition, zero-order hepatic oxidation</td><td class="">~0.8 : 1 (adult overall); ~1.0 : 1 (ages 18–25)</td><td class="">Stochastic acute events with rapid metabolic clearance</td><td class="">Moderate transient load; declining gap in younger demographics</td></tr><tr><td class="key">Cannabis &amp; Cannabinoids</td><td class="">Central CB1 partial agonism, retrograde synaptic transmission</td><td class="">~0.8 : 1 (adult overall); ~1.05 : 1 (adolescent / young adult)</td><td class="">Intermittent to daily lipophilic accumulation</td><td class="">Moderate load; male excess dissolved across younger age cohorts</td></tr><tr><td class="key">Class III Severe Obesity</td><td class="">Peripheral aromatase activation, chronic pro-inflammatory cytokine surge</td><td class="">~1.75 : 1 (12.1% F vs 6.9% M, NHANES)</td><td class="">Continuous baseline biological dysregulation</td><td class="">Moderate to high endogenous endocrine and inflammatory strain</td></tr><tr><td class="key">Institutional Narrative Proxies</td><td class="">Educational/media alignment, clinical diagnostic self-attribution</td><td class="">Elevated in young females (ages 18–29)</td><td class="">Continuous cognitive/behavioral alignment</td><td class="">High proxy indicator for diagnostic receptivity and drug utilization</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </figure></div>
-  </section><section id="s20">
-    <header class="section-head">
-      <p class="kicker forest">20</p>
-      <h2>Algorithmic Vector Weighting and Kinetic Differentiation</h2>
-    </header>
-    <div class="blocks"><p class="body">Mathematical modeling of Composite Exogenous Load relies upon a kinetic weighting hierarchy that distinguishes continuous steady-state pharmacological management from stochastic recreational events. The mathematical formulation assigns a kinetic weighting coefficient (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>) ranging from 0.0 to 1.0, determined by the proportion of time an individual spends under active central or systemic receptor displacement over a standard 365-day annual cycle.</p><figure class="formula">
-        <span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.9781em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2921em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">365</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">occupied</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
-        <p class="note"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9012em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">occupied</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> is the annualized duration of active receptor displacement. Steady-state agents approach <span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span>; weekly binge ethanol yields <span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0.06</span></span></span></span>.</p>
-      </figure><p class="body">For steady-state pharmaceuticals, including selective serotonin reuptake inhibitors, synthetic progestins, GLP-1 analogs, and levothyroxine, the kinetic coefficient approaches unity (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span>). These agents maintain constant plasma concentrations, ensuring continuous receptor occupation and persistent suppression of native biological signaling. Conversely, stochastic ethanol consumption exhibits rapid elimination kinetics. An individual engaging in weekly binge drinking experiences elevated blood alcohol concentrations for approximately 8 to 12 hours per week, yielding an annual kinetic exposure coefficient of approximately <span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0.06</span></span></span></span>. Even when accounting for higher episodic volumetric intake among males in older age cohorts, the mathematical aggregation of persistent, multi-drug daily pharmacotherapy yields a higher aggregate Composite Exogenous Load score for the female population across primary adult age strata.</p></div>
-  </section><section id="s21">
-    <header class="section-head">
-      <p class="kicker forest">21</p>
-      <h2>Quantitative Modeling of Polypharmacy and Compound Somatic Risk</h2>
-    </header>
-    <div class="blocks"><p class="body">Polypharmacy within modern epidemiological literature is traditionally categorized as the concurrent utilization of five or more prescription pharmaceuticals. However, within the architecture of Composite Exogenous Load, polypharmacy is re-conceptualized to include any multi-agent regimen that simultaneously targets distinct physiological axes, regardless of total numerical count. When an individual consumes a central nervous system active agent alongside a systemic endocrine disruptor, the biological outcome is not simple addition, but synergistic displacement of baseline homeostasis.</p><p class="body">Quantitative modeling of compound somatic risk incorporates cumulative receptor saturation scores across key physiological systems: the central serotonergic network, the hypothalamic-pituitary-adrenal (HPA) axis, the hypothalamic-pituitary-gonadal (HPG) axis, and metabolic receptor cascades. Demographic data indicate that females demonstrate a significantly higher prevalence of multi-axis pharmacological overlap. A primary cohort within contemporary clinical datasets consists of reproductive-age females co-administered a selective serotonin reuptake inhibitor (such as sertraline or escitalopram) alongside a synthetic progestin-containing contraceptive (such as oral ethinyl estradiol/drospirenone or a levonorgestrel intrauterine system). In middle-aged female cohorts, this dyad is frequently expanded to a triad or tetrad via the addition of levothyroxine for thyroid regulation or a GLP-1 receptor agonist for metabolic modulation. This continuous multi-system pharmacological occupancy establishes a compound somatic state wherein primary regulatory axes do not operate without synthetic intervention.</p></div>
-  </section><section id="s22">
-    <header class="section-head">
-      <p class="kicker forest">22</p>
-      <h2>Neuro-Endocrine Cross-Talk and Dual-Axis Disruption</h2>
-    </header>
-    <div class="blocks"><p class="body">The biological consequence of concurrent neuro-pharmacological and endocrine intervention manifests through complex neuro-endocrine cross-talk. Serotonergic pathways and the HPA-HPG signaling axes do not operate in physiological isolation. Serotonin receptors within the hypothalamus modulate the release of gonadotropin-releasing hormone, directly influencing gonadal steroidogenesis. Concurrently, endogenous estrogen and progesterone levels regulate tryptophan hydroxylase expression, serotonin reuptake transporter density, and monoamine oxidase activity within the prefrontal cortex and limbic system.</p><p class="body">When synthetic progestins interrupt natural luteal phase progesterone production, the endogenous synthesis of neuroactive steroids such as allopregnanolone is severely truncated. Allopregnanolone serves as an essential endogenous positive allosteric modulator of GABA-A receptors, maintaining baseline emotional stability and buffering central stress reactivity. The simultaneous administration of an SSRI, which alters synaptic serotonin availability and downstream 5-HT1A receptor sensitivity, alongside a synthetic progestin that depletes allopregnanolone, creates a state of chronic dual-axis disruption. The central nervous system is forced to adapt to modified monoaminergic signaling while deprived of its natural neurosteroid buffering mechanisms. This structural cross-talk demonstrates that polypharmacy cannot be analyzed through isolated pharmaceutical silos; rather, it represents a unified, compound displacement of baseline somatic autonomy that is disproportionately present in female cohorts.</p></div>
-  </section><section id="s23">
-    <header class="section-head">
-      <p class="kicker forest">23</p>
-      <h2>Longitudinal Cohort Trajectories and Historical Prescription Trends (2000–2026)</h2>
-    </header>
-    <div class="blocks"><p class="body">Tracing the longitudinal trajectory of psychotropic pharmaceutical consumption from 2000 through 2026 reveals a persistent and widening demographic divergence. Data compiled across successive NHANES and NHIS cycles demonstrate that while overall adult antidepressant usage expanded across the general population, the rate of acceleration was overwhelmingly concentrated within female cohorts. During the 2009 to 2018 surveillance intervals, longitudinal tracking confirmed a statistically significant upward trend in regular antidepressant utilization among women, whereas male usage rates remained comparatively plateaued. This structural disparity intensified markedly following 2020, driven by an unprecedented surge in psychotropic dispensing to adolescent and young adult females.</p><p class="body">By 2024, National Health Interview Survey metrics established that 24.9 percent of adult females routinely filled prescriptions for mental health conditions, compared to 13.4 percent of adult males. When isolating agents explicitly indicated for major depressive disorder in 2023 data, female prevalence stood at 15.3 percent versus 7.4 percent for males, maintaining a steady two-to-one ratio. Furthermore, cross-referencing these longitudinal pharmaceutical trends with historical contraceptive surveillance reveals that female polypharmacy—the concurrent daily intake of synthetic sex steroids and neuroactive psychotropics—transitioned from an exceptional clinical scenario in the late twentieth century to a normative baseline by the mid-2020s.</p></div>
-  </section><section id="s24">
-    <header class="section-head">
-      <p class="kicker forest">24</p>
-      <h2>Financial Expenditure Asymmetries and Structural System Dependence</h2>
-    </header>
-    <div class="blocks"><p class="body">The economic architecture of pharmaceutical consumption provides additional empirical confirmation of differential somatic load. Longitudinal health expenditure tracking and outpatient prescription claim analyses demonstrate a massive, persistent out-of-pocket spending disparity between sexes. In recent annual cycles, female out-of-pocket expenditures for mental health medications exceeded male spending by over 50 percent, creating a multi-billion-dollar annual financial divergence. Disaggregation across specific clinical conditions indicates that female out-of-pocket spending for depression prescriptions exceeds male spending by 113 percent, while anxiety medication expenditures show a 102 percent female excess. Schizophrenia remains the sole major diagnostic category wherein male financial outlay surpasses female spending.</p><p class="body">Age-stratified economic analysis demonstrates that while young boys under age 18 generate higher prescription expenses than young girls due to concentrated attention-deficit/hyperactivity disorder (ADHD) diagnoses, this relationship inverts dramatically upon reaching adult maturity. Among adults aged 45 to 64, female spending on mental health pharmaceuticals outstrips male outlay by 99 percent, expanding to a 117 percent excess in cohorts aged 65 and older. This sustained economic asymmetry demonstrates that female interaction with the medical-industrial complex is characterized by heightened visit frequency, elevated diagnostic capture, and prolonged prescription maintenance. Within the Composite Exogenous Load framework, this out-of-pocket financial commitment reflects a deep structural dependence upon external therapeutic interventions, solidifying a demographic state of continuous pharmaceutical integration.</p></div>
-  </section><section id="s25">
-    <header class="section-head">
-      <p class="kicker forest">25</p>
-      <h2>Neuro-Aesthetic and Systemic Dermatological Interventions</h2>
-    </header>
-    <div class="blocks"><p class="body">A comprehensive evaluation of Composite Exogenous Load requires incorporating non-surgical aesthetic procedures and continuous dermatological pharmacotherapy as distinct vectors of somatic intervention. Clinical surveillance datasets from the American Society of Plastic Surgeons and the International Society of Aesthetic Plastic Surgery demonstrate a persistent, pronounced female dominance in aesthetic procedures, with female patients accounting for approximately 85 to 90 percent of all interventions performed annually nationwide.</p><p class="body">Botulinum neurotoxin Type A injections (comprising onabotulinumtoxinA, abobotulinumtoxinA, and incobotulinumtoxinA) constitute the single most prevalent non-surgical procedural intervention, with millions of annual administrations concentrated heavily within female demographics aged 25 to 64. Furthermore, the subcutaneous and dermal administration of synthetic hyaluronic acid hydrogels, calcium hydroxylapatite, and poly-L-lactic acid fillers introduces persistent foreign material matrices designed to alter facial structural architecture. When combined with oral dermatological regimens such as spironolactone, an anti-androgenic mineralocorticoid receptor antagonist prescribed routinely to females for hormonal acne management, the aesthetic vector represents a continuous physiological and pharmacological commitment to external bodily modification.</p></div>
-  </section><section id="s26">
-    <header class="section-head">
-      <p class="kicker forest">26</p>
-      <h2>Central Neurological and Affective Implications of Aesthetic Modulators</h2>
-    </header>
-    <div class="blocks"><p class="body">The physiological impact of aesthetic neurotoxin administration extends beyond peripheral neuromuscular paralysis. At the local site of injection, botulinum neurotoxin cleaves synaptosome-associated protein 25 (SNAP-25), preventing vesicular exocytosis of acetylcholine and inducing temporary chemo-denervation of targeted musculature. However, neurobiological research highlights secondary central nervous system effects mediated through retrograde axonal transport and altered afferent feedback loops.</p><p class="body">Under the facial feedback hypothesis, voluntary facial muscle contraction generates proprioceptive signals that directly modulate limbic and amygdalar activity during affective processing. Functional magnetic resonance imaging studies demonstrate that targeted chemo-denervation of the corrugator supercilii muscles reduces amygdalar reactivity during the perception and experience of negative emotions, effectively dampening baseline emotional intensity and empathetic facial mimicry. Concurrently, systemic dermatological agents such as oral isotretinoin (13-cis-retinoic acid), prescribed extensively to female populations, cross the blood-brain barrier to bind nuclear retinoic acid receptors, altering hippocampal neurogenesis, orbitofrontal cortex metabolism, and central dopaminergic signaling networks. These cosmetic and dermatological interventions demonstrate that physical bodily modification within the female demographic routinely intersects with central neurochemical and affective processing, adding a distinct layer of exogenous load that remains largely absent in male population baselines.</p></div>
-  </section><section id="s27">
-    <header class="section-head">
-      <p class="kicker forest">27</p>
-      <h2>Psychological Distress, Diagnostic Expansion, and Clinical Pathologization</h2>
-    </header>
-    <div class="blocks"><p class="body">Surveillance of population mental health metrics consistently documents higher reported rates of affective distress among females. Data from the Substance Abuse and Mental Health Services Administration (SAMHSA) and national health surveys highlight elevated self-reported symptoms of major depressive episodes, generalized anxiety disorder, and chronic emotional dysregulation within female cohorts. However, evaluating these metrics through an epidemiological lens requires disentangling baseline physiological distress from the phenomenon of diagnostic expansion. Over successive iterations of the Diagnostic and Statistical Manual of Mental Disorders (DSM), diagnostic thresholds have systematically broadened, reclassifying sub-clinical emotional fluctuations, environmental stress responses, and situational grief as codifiable psychiatric pathologies.</p><p class="body">This structural diagnostic elasticity operates with disproportionate impact upon female demographics. Because female communication patterns and social norms favor emotional verbalization and institutional disclosure, females present to clinical settings at significantly higher rates during periods of acute stress. Modern psychiatric protocols, heavily oriented toward rapid symptom suppression via pharmacotherapy, routinely convert transient affective distress into long-term prescription regimens. Consequently, what begins as a temporary psychological adaptation to environmental strain is codified into a permanent medical diagnosis requiring daily pharmaceutical maintenance.</p></div>
-  </section><section id="s28">
-    <header class="section-head">
-      <p class="kicker forest">28</p>
-      <h2>Help-Seeking Asymmetries and the Medicalization Paradox</h2>
-    </header>
-    <div class="blocks"><p class="body">The pronounced sex divergence in psychotropic prescription rates is intimately linked to persistent asymmetries in health-seeking behavior. Empirical studies in primary care utilization confirm that adult females contact outpatient medical providers at significantly higher annual frequencies than males, even after excluding routine obstetric and gynecological appointments. This heightened frequency of clinical interaction establishes a continuous surveillance loop, drastically increasing the probability of routine mental health screening, diagnostic capture, and subsequent pharmacological initiation.</p><p class="body">This dynamic generates what can be termed the medicalization paradox. While help-seeking behavior is conventionally interpreted as an advantageous health strategy, within the context of chronic psychotropic prescribing, it functions as a primary mechanism of somatic management. Seeking medical intervention to resolve emotional or social friction frequently results in decade-spanning pharmacological dependency. In contrast, male reluctance to engage with formal medical systems, while historically associated with under-diagnosed acute pathology, inadvertently insulates the male substrate from continuous pharmaceutical integration. The paradox remains clear: elevated clinical engagement within female populations directly accelerates the systematic medicalization of daily life, steadily eroding unmediated somatic autonomy.</p></div>
-  </section><section id="s29">
-    <header class="section-head">
-      <p class="kicker forest">29</p>
-      <h2>Behavioral Outcomes, Lethality Metrics, and the Gender Paradox of Suicide</h2>
-    </header>
-    <div class="blocks"><p class="body">A critical counter-argument to the Composite Exogenous Load hypothesis posits that if male populations possess a higher degree of unmediated somatic autonomy, this state should correspond to superior functional psychological outcomes. However, population surveillance data consistently demonstrate a striking epidemiological divergence known as the gender paradox of suicide. Across primary public health datasets, including mortality tracking from the Centers for Disease Control and Prevention National Vital Statistics System, adult males account for approximately 75 to 80 percent of all completed suicides annually, maintaining an age-adjusted suicide rate nearly four times higher than that of females.</p><p class="body">Conversely, female populations demonstrate higher reported rates of suicidal ideation, non-lethal self-harm, and formal suicide attempts. Analyzing this disparity through the lens of somatic load reveals contrasting behavioral profiles: female distress is frequently operationalized through internalizing mechanisms, clinical disclosure, and non-violent self-harm, which routinely intersect with medical surveillance and pharmaceutical management. In contrast, male distress frequently manifests through acute externalizing behaviors, impulse escalation, and the selection of highly lethal means (predominantly firearms and hanging) that leave minimal window for clinical intervention. The high male mortality rate reflects a catastrophic failure of acute psychological coping and social insulation, rather than proof of systemic daily chemical dependency.</p></div>
-  </section><section id="s30">
-    <header class="section-head">
-      <p class="kicker forest">30</p>
-      <h2>Externalizing Pathology, Traumatic Mortality, and Biological Insulation</h2>
-    </header>
-    <div class="blocks"><p class="body">The structural divergence in behavioral expression extends to broader metrics of premature mortality. Males consistently exhibit higher per capita rates of fatal accidental injuries, occupational trauma, homicide victimization, and acute substance overdose deaths. These externalizing risk profiles illustrate that while male unmediated baseline functioning avoids continuous pharmacological override, it remains highly vulnerable to stochastic, high-lethality environmental hazards and unbuffered psychological crises.</p><p class="body">Conversely, the intensive medicalization of the female demographic functions as a double-edged epidemiological buffer. Continuous engagement with outpatient psychiatric services, long-term prescription psychotropics, and routine clinical monitoring provides a high-density safety net against acute, impulse-driven self-destruction. However, this protective buffer comes at the direct expense of somatic autonomy. The female physiological substrate achieves lower acute externalizing mortality by accepting permanent, multi-system pharmacological management. Thus, the epidemiological landscape presents a clear structural trade-off: male populations maintain a higher baseline of unmediated physical autonomy accompanied by elevated vulnerability to acute traumatic mortality, whereas female populations exist within a heavily buffered clinical framework characterized by persistent, multi-vector chemical maintenance.</p></div>
-  </section><section id="s31">
-    <header class="section-head">
-      <p class="kicker forest">31</p>
-      <h2>Epistemological Synthesis and Sociological Counter-Mechanisms</h2>
-    </header>
-    <div class="blocks"><p class="body">The epistemological coherence of the Composite Exogenous Load model relies upon shifting the analytical locus from subjective therapeutic intent to observable biochemical state. Traditional sociological frameworks analyze healthcare utilization through narratives of empowerment, diagnostic self-advocacy, or reduced stigma. However, a strictly materialist paradigm evaluates the physical substrate directly: specifically, whether cellular, neurochemical, and systemic signaling pathways operate via endogenous homeostasis or persistent external override. The structural expansion of modern clinical governance has established powerful institutional feedback loops that systematically convert female environmental stress into clinical diagnoses. Sociological counter-mechanisms, including alternative wellness movements, holistic health subcultures, and self-directed lifestyle modifications, have proven insufficient to offset the institutional weight of mainstream clinical protocols, which continuously re-anchor female somatic functioning within a formal pharmaceutical matrix.</p></div>
-  </section><section id="s32">
-    <header class="section-head">
-      <p class="kicker forest">32</p>
-      <h2>Institutional Autonomy versus Medicated Compliance</h2>
-    </header>
-    <div class="blocks"><p class="body">Within contemporary administrative, academic, and corporate environments, behavioral compliance and operational performance are increasingly supported by continuous pharmacological buffering. Navigating high-density institutional settings demands sustained emotional regulation, cognitive predictability, and chronic stress suppression. For female populations, who maintain high representation across tertiary education, public administration, and service-sector healthcare roles, psychotropic and endocrine modulators function as systemic tools to maintain operational equilibrium under continuous environmental demand.</p><p class="body">This functional reliance establishes a regime of medicated compliance, wherein somatic autonomy is implicitly traded for institutional adaptability. The willingness to accept therapeutic modification allows individuals to meet rigorous organizational performance standards, yet it permanently alters baseline neurochemical processing. Conversely, male resistance to routine medical surveillance, while occasionally manifesting as acute diagnostic neglect, inadvertently shields the male physiological substrate from institutionalized pharmaceutical integration. The resulting sociological dynamic demonstrates a clear structural divergence: female populations achieve higher institutional integration through continuous pharmacological management, whereas male populations maintain higher unmediated bodily independence at the cost of formal clinical insulation.</p></div>
-  </section><section id="s33">
-    <header class="section-head">
-      <p class="kicker forest">33</p>
-      <h2>Policy Implications and Public Health Paradigms</h2>
-    </header>
-    <div class="blocks"><p class="body">Public health surveillance frameworks require a fundamental paradigm shift in how chemical exposure and somatic autonomy are operationalized. Current epidemiological monitoring systems, such as those maintained by the Substance Abuse and Mental Health Services Administration (SAMHSA) and global health organizations, privilege acute recreational substance consumption while maintaining a structural blind spot regarding continuous, steady-state prescription burdens. By categorizing approved neuropharmaceuticals, synthetic endocrine modulators, and therapeutic peptides as neutral or non-disruptive baseline states, existing public health policy systematically distorts population-level health assessments. A modernized surveillance paradigm must implement integrated Composite Exogenous Load metrics that aggregate both illicit recreational agents and prescribed pharmacological maintenance. Policy frameworks should mandate sex-disaggregated tracking of long-term polypharmacy, particularly dual-axis interventions involving concurrent psychotropic and steroidal contraceptive administration, to establish accurate epidemiological baselines across demographic cohorts.</p></div>
-  </section><section id="s34">
-    <header class="section-head">
-      <p class="kicker forest">34</p>
-      <h2>Bioethical Frameworks, Informed Consent, and Long-Term Somatic Autonomy</h2>
-    </header>
-    <div class="blocks"><p class="body">The widespread normalization of chronic pharmacological management introduces profound bioethical challenges regarding informed consent and somatic self-determination. Contemporary clinical consent protocols typically evaluate pharmaceuticals through isolated diagnostic lenses, presenting individual medications as discrete treatments for specific pathologies. However, when reproductive-age individuals are prescribed multi-agent regimens that simultaneously alter monoaminergic signaling, gonadotropin release, and metabolic pathways, informed consent rarely accounts for systemic, multi-axis cross-talk or decades-long physiological adaptation. Ethical re-evaluation demands that clinical practitioners disclose the cumulative somatic costs of perpetual pharmacological maintenance, distinguishing acute crisis stabilization from permanent lifestyle medicalization. Safeguarding somatic autonomy requires prioritizing non-pharmacological interventions where feasible, ensuring patients fully understand the systemic trade-offs between continuous therapeutic buffering and the preservation of an unmediated biological baseline.</p></div>
-  </section><section id="s35">
-    <header class="section-head">
-      <p class="kicker forest">35</p>
-      <h2>Technological and Pharmacological Projections (2026–2035)</h2>
-    </header>
-    <div class="blocks"><p class="body">Projections across global pharmaceutical market surveillance indicate a rapid acceleration in the density and precision of somatic modulators through the 2026 to 2035 window. The landscape of chronic pharmacological management is undergoing a structural transformation driven by two dominant market vectors: next-generation incretin mimetics and novel non-dopaminergic neuropharmaceuticals. Incretin receptor agonist expansion, moving from dual GIP/GLP-1 agents toward tri-agonists such as retatrutide alongside high-bioavailability oral formulations, is projected to reach global market valuations exceeding 130 billion dollars by 2035. Given that female adoption accounts for nearly 70 to 79 percent of outpatient weight-loss prescriptions, this expansion establishes a permanent, long-term metabolic override mechanism across mid-life female cohorts. Simultaneously, the psychiatric pipeline is transitioning beyond traditional monoamine transporter blockades toward muscarinic receptor agonists, NMDA receptor modulators, and neuroplastogenic compounds. Supported by AI-driven diagnostic funnels and expanded telehealth prescribing, these novel agents lower the barrier for clinical initiation, ensuring that sub-clinical distress is rapidly integrated into formal pharmaceutical frameworks.</p></div>
-  </section><section id="s36">
-    <header class="section-head">
-      <p class="kicker forest">36</p>
-      <h2>Next-Generation Neuro-Somatic Interventions and Substrate Integration</h2>
-    </header>
-    <div class="blocks"><p class="body">The technological evolution of drug delivery infrastructure is explicitly engineered to minimize patient non-adherence, effectively eliminating unmediated physiological intervals. Long-acting injectable (LAI) depot formulations, biodegradable subcutaneous implants, and continuous microfluidic pump systems are replacing daily oral administration across both psychotropic and endocrine domains. In psychiatric care, third-generation atypical antipsychotics and sustained-release mood modulators are increasingly deployed via multi-month depot injections that maintain fixed plasma concentrations without requiring active daily patient compliance. In the endocrine sphere, multi-year subdermal progestin implants and long-acting peptide delivery systems ensure continuous, non-fluctuating target receptor occupation. As continuous biosensing technology and digital health tracking converge with automated drug delivery, the temporal windows during which the female somatic substrate operates without external chemical intervention are systematically compressed toward zero. This technological trajectory confirms that future demographic profiles will be defined by an even higher degree of structural pharmaceutical integration, solidifying the per capita asymmetry in unmediated somatic baseline.</p></div>
-  </section><section id="s37">
-    <header class="section-head">
-      <p class="kicker forest">37</p>
-      <h2>Philosophical and Ontological Synthesis of Human Autonomy</h2>
-    </header>
-    <div class="blocks"><p class="body">The theoretical re-evaluation of sobriety through Composite Exogenous Load carries profound implications for the philosophy of mind and the ontology of human agency. Classically, autonomous agency presupposes a mind-body continuum capable of authentic self-regulation, affective processing, and unmediated environmental response. When central neurotransmitter availability, stress responsiveness, and foundational endocrine feedback loops are continuously dictated by synthetic chemical inputs, the ontological status of subjective experience is fundamentally altered. The individual no longer encounters reality through an unmediated biological apparatus; rather, experience is filtered through a pre-conditioned biochemical threshold engineered to suppress volatile affect and enforce behavioral equilibrium. This state represents a cybernetic integration wherein human agency is perpetually mediated by pharmaceutical feedback loops, shifting the biological substrate from an autonomous entity to an artificially managed system.</p></div>
-  </section><section id="s38">
-    <header class="section-head">
-      <p class="kicker forest">38</p>
-      <h2>Conceptual Framework of Unmediated Somatic Autonomy</h2>
-    </header>
-    <div class="blocks"><p class="body">Synthesizing these empirical and philosophical dimensions necessitates establishing a formal conceptual framework for Unmediated Somatic Autonomy. This framework defines true bodily autonomy not as the unconstrained liberty to seek medical modification, but as the actualized state of operating free from continuous exogenous chemical regulation. Under this paradigm, the preservation of native biological rhythms, unsuppressed hormonal cascades, and natural neurochemical fluctuation constitutes the baseline condition for authentic physical self-determination. The ongoing expansion of multi-vector pharmacological protocols across population-scale demographics fundamentally destabilizes this baseline. By demonstrating that female populations exist under a substantially higher aggregate density of continuous pharmaceutical, endocrine, and aesthetic interventions, the Composite Exogenous Load model establishes that unmediated physical autonomy is disproportionately preserved within the male physiological substrate, re-defining the demographic parameters of true per capita baseline sobriety.</p></div>
-  </section><section id="s39">
-    <header class="section-head">
-      <p class="kicker forest">39</p>
-      <h2>Final Synthesis, Concluding Remarks, and Integrated Matrix</h2>
-    </header>
-    <div class="blocks"><p class="body">Re-evaluating population-level sobriety through the framework of Composite Exogenous Load resolves the fundamental contradiction between traditional substance surveillance and contemporary pharmacological reality. Conventional epidemiological frameworks retain a narrow focus on acute, stochastic recreational events, primarily ethanol bingeing and cannabis consumption. This conceptual limitation misclassifies the population baseline by treating approved, continuous therapeutic maintenance as a neutral biological state. When the analytical lens expands to encompass total somatic and cognitive autonomy, the continuous occupancy of central receptors and systemic endocrine axes emerges as the decisive differentiator of baseline sobriety.</p><p class="body">The aggregate empirical evidence demonstrates a clear demographic asymmetry across primary adult cohorts. While acute male excesses in recreational intoxication have systematically attenuated among younger populations, the female physiological substrate is subjected to persistent, multi-vector pharmacological management without a male equivalent. This perpetual state of somatic mediation is driven by population-scale synthetic sex steroid exposure, a twofold excess in prescription psychotropics, pronounced dominance in GLP-1 receptor mimetic utilization, widespread autoimmune thyroid replacement, and high-density neuro-aesthetic interventions. Because these daily interventions maintain constant plasma concentrations and alter native homeostatic signaling, the female demographic operates under a structurally higher daily exogenous chemical load. Consequently, when sobriety is operationalized as the preservation of an unmediated biological baseline, adult males demonstrate a verifiably higher state of per capita net sobriety and somatic autonomy.</p><figure class="table-wrap">
-        <figcaption>Table 2. Integrated baseline kinetics by somatic load vector.</figcaption>
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>Somatic Load Vector</th><th>Male Baseline Kinetics</th><th>Female Baseline Kinetics</th><th>Primary Physiological Axis</th><th>Autonomy Impact Differential</th></tr></thead>
-            <tbody>
-              <tr><td class="key">Exogenous Sex Steroids</td><td class="">Negligible continuous population exposure</td><td class="">High continuous prevalence (~55% reproductive age)</td><td class="">Hypothalamic-Pituitary-Gonadal</td><td class="">Continuous female endocrine override</td></tr><tr><td class="key">Central Psychotropics</td><td class="">Lower prescription rate (~13.4% NHIS)</td><td class="">Double female excess (~24.9% NHIS)</td><td class="">Monoaminergic / Limbic networks</td><td class="">Continuous female monoamine modulation</td></tr><tr><td class="key">Incretin Mimetics (GLP-1)</td><td class="">Minority utilization (~20–30% weight loss)</td><td class="">Dominant market share (~70–79% weight loss)</td><td class="">Hypothalamic satiety / Metabolic</td><td class="">Continuous female metabolic alteration</td></tr><tr><td class="key">Autoimmune &amp; Thyroid</td><td class="">Low population prevalence</td><td class="">High female dominance (80% levothyroxine)</td><td class="">Basal metabolic / Pituitary feedback</td><td class="">Continuous female thyroid replacement</td></tr><tr><td class="key">Recreational Ethanol/Cannabis</td><td class="">Higher acute volume in older cohorts</td><td class="">Lower acute volume; converging in young cohorts</td><td class="">Transient GABA / CB1 activation</td><td class="">Stochastic male load with rapid clearance</td></tr><tr><td class="key">Aesthetic Neuromodulators</td><td class="">Minor procedural participation</td><td class="">Major procedural dominance (85–90%)</td><td class="">Neuromuscular / Limbic feedback</td><td class="">Female structural neuromuscular alteration</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </figure></div>
-  </section>
-    <section id="conclusion">
-    <header class="section-head">
-      
-      <h2>Conclusion</h2>
-    </header>
-    <div class="blocks"><p class="body">The Composite Exogenous Load framework fundamentally redefines how public health, epidemiology, and bioethics must conceptualize population-level sobriety and physiological baseline. By displacing obsolete, single-variable diagnostic frameworks that focus solely on acute, stochastic substance consumption, this model exposes the profound degree to which modern clinical governance has altered the underlying human somatic apparatus. True bodily autonomy cannot be assessed through therapeutic intent or diagnostic justification; it requires a rigorous, materialist evaluation of whether cellular signaling, neurotransmitter availability, and neuroendocrine cascades operate via native homeostasis or continuous exogenous intervention. Continuous, steady-state pharmacological management constitutes a permanent structural displacement of unmediated somatic autonomy, transforming an organic baseline into a perpetually managed physiological system.</p><p class="body">Across primary adult demographics, empirical evidence confirms a striking structural asymmetry. While legacy excesses in acute male alcohol and cannabis consumption have progressively narrowed or reached functional parity in younger cohorts, the female somatic substrate remains subjected to intensive, multi-axis pharmacological integration. The continuous, daily administration of synthetic sex steroids and progestins, double-fold prescription excesses in selective serotonin reuptake inhibitors and anxiolytics, widespread adoption of peptide-based metabolic modulators, and routine thyroid and neuro-aesthetic interventions collectively establish a high-density chemical baseline. Because these pharmacological vectors enforce constant plasma concentrations and uninterrupted receptor binding, the daily functioning of the female demographic is defined by sustained external regulation. Conversely, despite higher male vulnerability to unbuffered acute crises and high-lethality externalizing outcomes, the male physiological substrate maintains a verifiably higher degree of unmediated biological independence due to the transient clearance kinetics of episodic inputs and lower rates of long-term prescription integration.</p><p class="body">Ultimately, this empirical reality forces a critical bioethical re-evaluation of institutional compliance and human agency. Modern institutional architectures routinely incentivize emotional stabilization, metabolic control, and stress dampening, encouraging individuals to trade unmediated physiological self-regulation for enhanced organizational adaptability. Recognizing this continuous medicalization as a substantive loss of baseline somatic sovereignty provides an indispensable foundation for future research. Epidemiologists, bioethicists, and public health policymakers must abandon the illusion of prescription neutrality and incorporate total, multi-vector exogenous load into future population assessments, establishing a precise, unvarnished measure of genuine physical autonomy in the modern era.</p></div>
-  </section>
-    <section id="sources">
-      <header class="section-head">
-        <h2>Methodological references</h2>
-      </header>
-      <ul class="items"><li>
-        <p class="lead">National Health Interview Survey (NHIS) Mental Health Surveillance.</p>
-        <p class="muted">Data from the 2024 Centers for Disease Control and Prevention (CDC) National Health Interview Survey establish the foundational two-to-one baseline in psychotropic pharmaceutical utilization. The survey indicates that 24.9 percent of adult women took medication for their mental health over the prior twelve months, compared to 13.4 percent of adult men.</p>
-      </li><li>
-        <p class="lead">Food and Drug Administration (FDA) Pharmacokinetic Directives.</p>
-        <p class="muted">Evidence for differential physiological clearance of neuropharmaceuticals is formalized in FDA dosing guidelines. The administration mandated a dosage reduction for the hypnotic agent zolpidem, lowering the recommended initial female dose to 5 mg, because zolpidem clearance is substantially lower in women.</p>
-      </li><li>
-        <p class="lead">American Society of Plastic Surgeons (ASPS) Procedural Statistics.</p>
-        <p class="muted">Procedural statistics for the 2023 and 2024 clinical cycles demonstrate that 92 to 95 percent of all cosmetic procedures are performed on female patients.</p>
-      </li><li>
-        <p class="lead">Glucagon-Like Peptide 1 (GLP-1) Clinical Efficacy and Dispensing.</p>
-        <p class="muted">Clinical meta-analyses covering medications such as semaglutide, dulaglutide, and retatrutide indicate that female cohorts consistently achieve a higher percentage of total body weight reduction than male cohorts, operating in tandem with female majority share of the GLP-1 weight-loss prescription market.</p>
-      </li><li>
-        <p class="lead">CDC National Vital Statistics System.</p>
-        <p class="muted">Adult males consistently account for approximately 75 to 80 percent of completed suicides, demonstrating a fatal externalizing failure of acute psychological coping that occurs outside of continuous clinical surveillance and pharmacological buffering frameworks.</p>
-      </li></ul>
-      <h3>Supplementary notes</h3>
-      <div style="margin-top:1.25rem"><ul class="items"><li>
-        <p class="lead">Polypharmacy redefinition.</p>
-        <p class="muted">Traditional epidemiological literature defines polypharmacy numerically as five or more concurrent prescriptions. This analysis redefines polypharmacy functionally as the concurrent disruption of distinct homeostatic axes, specifically the intersection of central nervous system psychotropics and synthetic endocrine modulators.</p>
-      </li><li>
-        <p class="lead">Kinetic weighting coefficients.</p>
-        <p class="muted">Steady-state medications that enforce constant receptor occupancy receive a kinetic weight approaching unity, whereas episodic ethanol intoxication receives a fractional weight commensurate with its rapid hepatic oxidation and clearance.</p>
-      </li><li>
-        <p class="lead">Diagnostic elasticity.</p>
-        <p class="muted">The expansion of psychiatric codification criteria across successive diagnostic manuals heavily influences the medicalization of female environmental stress. Clinical diagnoses are treated not as refutations of somatic load, but as the institutional mechanisms through which perpetual pharmacological management is initiated and justified.</p>
-      </li></ul></div>
-    </section>
-  </div>
+<header>
+<h1>Sex Differences in Daily Pharmaceutical Occupancy among U.S. Adults</h1>
+<p class="byline">Independent scholar</p>
+<p class="byline">September 2026</p>
+</header>
+<hr class="rule"/>
+<p class="kicker" id="abstract">Abstract</p>
+<p>This paper operationalizes population sobriety as the preservation of an unmediated neurochemical and metabolic baseline rather than as the absence of episodic recreational intoxication. Under that definition the relevant quantity is Composite Exogenous Load: the expected number of days per year on which an adult’s monoaminergic, hypothalamic-pituitary-gonadal, thyroid, incretin, or sleep circuitry is under standing pharmaceutical command. Recreational ethanol and cannabis are retained as a side ledger of event-days. They are not permitted to veto a scheduled ligand that occupies receptors on the remaining days of the year.</p>
+<p>National interview, claims, and dispensing series from 2021 through 2025 are assembled into a parts list of qualifying agents and into a first occupancy-day envelope by sex. Qualifying agents are partitioned into three tiers. Tier 1 contains scheduled endocrine agents with no male analogue at population scale: combined and progestin-only oral contraceptives, hormonal intrauterine systems, etonogestrel implants, depot medroxyprogesterone, patches and rings, menopausal hormone therapy, endometriosis GnRH agents, and anti-estrogenic breast-cancer regimens, together with acne-dose spironolactone. Tier 2 contains shared classes with a stable female excess: mental health medication, benzodiazepines, hypnotics, levothyroxine, and weight-indication GLP-1 agonists. Adult stimulant fills, once a candidate male class, are now female-led and sit here as well. Tier 3 contains female-concentrated treatments whose denominators follow female-concentrated disease, principally CGRP migraine antagonists and antiresorptive osteoporosis drugs. Cosmetics, fragrance musks, and event-only obstetrical agents are refused.</p>
+<p>On twelve-month mental health medication the 2024 National Health Interview Survey records 24.9 percent of women and 13.4 percent of men. On depression-specific medication the 2023 brief records 15.3 percent and 7.4 percent. Among females aged 15–49, current oral contraception stands at 11.4 percent and long-acting reversible contraception at 10.5 percent, with no male pharmaceutical counterpart. Daily or near-daily sleep-aid use in 2024 stands at 14.8 percent of women and 10.8 percent of men. Weight-indication GLP-1 use in 2025 survey series is higher among women than among men. An independence envelope built from these margins places the probability of at least one standing qualifying agent on a random day near one half for adult women and near one quarter for adult men. That envelope is not a joint distribution. It is a bound that claims files must replace. Sensitivity rows that halve twelve-month mental health medication, drop GLP-1, drop levothyroxine, restrict hormones to the pill, and add male testosterone, finasteride, and daily cannabis do not reverse the sex order under matched estimands. The one arithmetic that favors men pairs a female lower bound with a male independence envelope. That is not a matched comparison. Duty-cycle-correcting the psychotropic floor before that mixed comparison produces an all-adult male lead and an 18–44 tie. Matched envelopes in ages 18–44 remain 0.46 against 0.18.</p>
+<p>If sobriety is unmediated baseline, adult women carry the higher per capita Composite Exogenous Load. The surplus is pharmaceutical. It is concentrated in ages 18–44, where Tier 1 steroids land on the same heads as Tier 2 psychotropics. Adult male excesses in binge drinking and cannabis use remain real after age 25 and convert to a small number of event-days per capita per year. They do not restore a native cycle, a native serotonergic set point, or an unmedicated night.</p>
+<p class="kw"><b>Keywords.</b> composite exogenous load; occupancy-days; hormonal contraception; antidepressants; hypnotics; GLP-1 agonists; levothyroxine; CGRP antagonists; female-exclusive pharmacopeia; unmediated baseline</p>
+<h2 id="s1">1. Introduction</h2>
+<p class="drop">A public quarrel about which sex is more sober has been conducted, until now, in the wrong units. The folk unit is the weekend. A man who drinks heavily twice a month is entered as unsober. A woman who wakes and sleeps for a year under a selective serotonin reuptake inhibitor, a levonorgestrel intrauterine system, and a zolpidem prescription is entered as sober provided she is not drunk at the time of the argument. That bookkeeping treats an event as a regime and a regime as an irrelevance. It cannot decide the question it pretends to decide.</p>
+<p>The present paper changes the unit. Sobriety is defined as the preservation of an unmediated neurochemical and metabolic baseline: the state in which hypothalamic-pituitary gonadal pulse generation, monoaminergic tone, thyroid set point, incretin signaling, and sleep architecture are not under standing exogenous command. Composite Exogenous Load is the expected count of such commands across a year, expressed first as the probability that a random adult of given sex is mediated on a random day, and second as the expected number of concurrent qualifying classes. Recreational intoxicants remain visible. They are scored as event-days. A binge is a day. A daily tablet is three hundred and sixty-five days.</p>
+<p>The originating observation that forced the change of unit was not subtle. A large and stable female excess in antidepressant and other mental health medication has been recorded across interview and dispensing systems for years, with White adults at the top of the race distribution and with a post-2020 acceleration that is a female adolescent and young-adult phenomenon. Hormonal contraception is, at population scale, a female institution. Sleep medication used most days is more female. Levothyroxine exposure is more female. The weight-indication GLP-1 wave is more female. Spironolactone as acne therapy is prescribed to women and withheld from men because it is anti-androgenic at those doses. None of these facts is obscure. What has been obscure is the refusal to add them in a unit that respects duration.</p>
+<p>Two errors have kept the addition from being made. The first error is clinical courtesy. A prescription is treated as the cancellation of a need rather than as the installation of a ligand. Need may be real. Ligand installation is still ligand installation. The second error is recreational capture. Because adult men still binge more and still use more cannabis after age 25, the pharmaceutical ledger is treated as secondary. Sixteen episodic ethanol days do not offset a year of serotonergic occupancy. They do not restart an ovary that has been placed under progestin.</p>
+<p>The design that follows is deliberately coarse. No new survey is fielded. The paper takes published national prevalences, assigns each qualifying agent a duty cycle, writes the parts list by sex, and constructs an independence envelope for the union probability while stating, at every point, that the envelope is not the joint. The missing object is the concurrent class count in a thirty-day window from MEPS or a commercial claims file. Until that file is in hand the cocktail remains a stack of large female margins. The stack is already enough to reject the claim that women, on the unmediated-baseline definition, are the more sober sex.</p>
+<figure id="fig-1"><div class="fig-body"><div class="year">
+  <div class="yr"><span>Female standing days</span><em>183 of 365</em></div>
+  <div class="track fat"><i class="f" style="width:50.136986301369866%"></i></div>
+  <div class="yr"><span>Male standing days</span><em>99 of 365</em></div>
+  <div class="track fat"><i class="m" style="width:27.123287671232877%"></i></div>
+  <div class="yr"><span>Male ethanol event-days</span><em>16 scattered days</em></div>
+  <div class="track fat ticks"><span style="left:3.125%"></span><span style="left:9.375%"></span><span style="left:15.625%"></span><span style="left:21.875%"></span><span style="left:28.125%"></span><span style="left:34.375%"></span><span style="left:40.625%"></span><span style="left:46.875%"></span><span style="left:53.125%"></span><span style="left:59.375%"></span><span style="left:65.625%"></span><span style="left:71.875%"></span><span style="left:78.125%"></span><span style="left:84.375%"></span><span style="left:90.625%"></span><span style="left:96.875%"></span></div>
+</div></div><figcaption><b>Figure 1.</b> Duty cycle, not peak drunkenness. Standing occupancy-days fill the year. Ethanol events are ticks. Sources: independence envelope in Section 5; binge conversion in Section 5.2.</figcaption></figure>
+<figure id="fig-2"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Adult occupancy</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:100%"></i></div><small>183</small></div>
+<div class="line"><div class="track"><i class="m" style="width:54.09836065573771%"></i></div><small>99</small></div>
+</div></div><div class="bar-row"><div class="lab">Ages 18–44</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:91.80327868852459%"></i></div><small>168</small></div>
+<div class="line"><div class="track"><i class="m" style="width:36.0655737704918%"></i></div><small>66</small></div>
+</div></div><div class="bar-row"><div class="lab">Ethanol events</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:5.46448087431694%"></i></div><small>10</small></div>
+<div class="line"><div class="track"><i class="m" style="width:8.743169398907105%"></i></div><small>16</small></div>
+</div></div></div></div><figcaption><b>Figure 2.</b> Occupancy-days per capita per year versus ethanol event-days. Standing pharmaceutical days dwarf recreational events on both sexes; the female surplus is the standing column. Independence envelope, Table 2.</figcaption></figure>
+<h2 id="s2">2. Sources, inclusion rules, and the occupancy-day algebra</h2>
+<p>The paper is an accounting exercise performed on published national estimates. It assigns published prevalences to a common unit and states where the assignment is exact, where it is a duration approximation, and where it is only a bound. Readers who want a joint distribution must wait for a claims extract. Readers who want a verdict from the parts list already have enough structure to see the direction of the sex difference.</p>
+<h3>2.1 Source hierarchy</h3>
+<p>Three federal interview systems supply the core stocks. The National Health Interview Survey supplies twelve-month mental health medication, twelve-month depression medication, counseling, and the 2024 sleep-aid items that distinguish prescription hypnotics, over-the-counter sleep aids, and cannabis or cannabidiol used as a sleep aid. The National Survey of Family Growth supplies current contraceptive status among females aged 15–49, with method-specific shares for the pill, intrauterine devices, implants, injectables, and sterilization. The National Survey on Drug Use and Health supplies past-month and past-year alcohol and cannabis, binge and heavy use, and prescription tranquilizer and sedative use and misuse.</p>
+<p>Claims and dispensing series supply slope and class detail that household interviews cannot. IQVIA longitudinal fills document the post-March 2020 steepening of adolescent antidepressant dispensing and its concentration among females. RAND American Life Panel and Gallup supply GLP-1 figures by sex and age for the weight indication. Optum and NHANES-derived hypothyroidism series supply the levothyroxine denominator. JAMA Health Forum NHANES work supplies menopausal hormone therapy prevalence. Guttmacher method tables convert NSFG percentages into user counts. Ideology and media diet are excluded from Composite Exogenous Load. They may describe a climate. They do not occupy a receptor.</p>
+<h3>2.2 What counts as standing occupancy</h3>
+<p>An agent enters the index if two conditions hold. The labeled or customary course is measured in weeks or longer. The mechanism of action alters monoaminergic tone, GABAergic tone, hypothalamic-pituitary-gonadal signaling, thyroid hormone availability, incretin and satiety signaling, or sleep initiation and maintenance. A weekend of ethanol fails the first condition. A statin fails the second. Cosmetic botulinum toxin and hyaluronic fillers fail the second as indexed here, even though their procedure ratios run about 9:1 and 10:1 female. A combined oral contraceptive satisfies both. An SSRI satisfies both. Zolpidem taken most nights satisfies both. Semaglutide taken weekly for weight satisfies both. Levothyroxine satisfies both. Acne-dose spironolactone satisfies both. Tamoxifen satisfies both. Dienogest satisfies both. A CGRP monoclonal antibody satisfies both.</p>
+<p>Duty cycle is assigned by class. Daily oral tablets and intrauterine and implant systems already in situ are scored as 365 days among current users. Weekly GLP-1 injections are scored as 365 days among current users because receptor engagement is maintained across the week. Twelve-month interview items overstate the daily stock if some users completed a short course. Sleep-aid items that specify “most days or every day in the past thirty days” are the cleanest duty-cycle measures in the interview set. Episodic female-only agents such as emergency contraception and mifepristone are occupancy events. They are not standing load and stay out of the core index.</p>
+<h3>2.3 The three estimands</h3>
+<p>Coverage is the probability that a random adult of given sex is mediated on a random day. Intensity is the expected number of concurrent qualifying classes. Occupancy-days per capita per year are coverage times 365. A woman on a pill, an SSRI, and a hypnotic contributes three to intensity and 1,095 class-days. A man who binges, using 26 percent past-month male binge prevalence and a generous five binge days in that month, contributes about sixteen ethanol event-days per adult man per year. Daily male cannabis, where it exists, does enter male coverage. It will not be allowed to stand in for a missing male contraceptive steroid.</p>
+<p>The published sources give margins, not a joint. The lower bound on coverage is the largest single daily class prevalence. The independence upper envelope is one minus the product of the complements. Positive dependence among classes, the clinically ordinary case, lowers coverage relative to independence. Population intensity does not move. Linearity of expectation makes intensity the sum of the class prevalences whether or not the classes nest. What dependence does is concentrate that sum on fewer heads: fewer people covered, more classes each. Age restriction is not optional. The theoretically sharp contrast is ages 18–44, where Tier 1 contraception, post-2020 antidepressant slope, acne-dose spironolactone, and rising weight-indication GLP-1 inhabit the same band.</p>
+<p>The algebra refuses to add raw percentages across classes and call the sum a prevalence. It refuses to convert occupancy into a drunkenness score with invented weights. It refuses to treat help-seeking as a deletion operator on a published fill rate. It refuses to treat a male event-day as the moral equivalent of a female standing day. Those refusals are the method.</p>
+<aside class="methods"><p class="kicker">Methods box</p>
+<p>Coverage is 1 minus the product of the complements of each class prevalence. Occupancy-days are coverage times 365. Intensity is the sum of the class prevalences. The base envelope uses five all-adult working shares. Women: mental health medication 0.249, hormonal methods 0.09, prescription hypnotic most days 0.064, levothyroxine 0.075, weight-indication GLP-1 0.152. Men: 0.134, 0, 0.039, 0.025, 0.097. The hormone term is 0.18 of women 15–49 times about one half, the share of adult women in that age band. That 0.18 is conservative: the pill at 0.114 plus LARC at 0.105 minus a copper residual of about two points, plus smaller depot, patch, and ring stocks, rounded down. Current intrauterine systems, implants, daily tablets, and weekly GLP-1 injections are scored at duty cycle 1 among current users. Twelve-month mental health items overstate daily stock. That overstatement is a sensitivity row, not a hidden assumption. Ethanol event-days are past-month binge prevalence times five binge days in that month times twelve: about sixteen per adult man and about ten per adult woman. The five is a generous within-month frequency. Daily or almost daily alcohol (3.9 percent of persons 12 or older in 2024) is standing ethanol. It is not added on top of binge event-days. It enters Table 4 as a substitution row. Positive dependence lowers coverage relative to independence. Population intensity, the sum of class prevalences, does not move. Never compare a lower bound on one sex to an independence envelope on the other. Classes omitted from the base envelope, including daily cannabis, testosterone, finasteride, stimulants, benzodiazepines, menopausal hormone therapy, spironolactone, and nicotine, are entered only in Table 4 or named as omissions. Cosmetics, fragrance musks, and obstetric events stay out of every row.</p>
+</aside>
+<h2 id="s3">3. Tier 1. Female-exclusive scheduled endocrine occupancy</h2>
+<p>Tier 1 is the column that ends the argument about symmetry. These agents are prescribed to women for indications that do not exist in men, or they are withheld from men because the same mechanism feminizes. Their contribution to male Composite Exogenous Load is zero at population scale. Any accounting that omits them and then declares the sexes tied on “medication” has already chosen its conclusion.</p>
+<h3>3.1 Combined and progestin-only oral contraceptives</h3>
+<p>The National Survey of Family Growth for 2022–2023 records that 54.3 percent of females aged 15–49 were current contraceptive users and that oral pills were used by 11.4 percent of all women in that age range. White non-Hispanic females show the highest current-use and pill-use rates in the NSFG brief (58.7 percent any method, 14.1 percent pill), above Black non-Hispanic and Hispanic females. The pill is therefore thicker in the same demographic cell that already leads antidepressant tables.</p>
+<p>Combined oral contraceptives suppress pituitary gonadotropins, abolish the pre-ovulatory estradiol surge and the luteal progesterone rise, and substitute a synthetic pair whose androgenicity and sex-hormone-binding-globulin effects vary by progestin. That substitution is the occupancy. Mood heterogeneity across formulations is real and is not a male analogue. A man has no analogue. Progestin-only pills are a smaller slice of the same axis.</p>
+<h3>3.2 Hormonal intrauterine systems and the implant</h3>
+<p>Long-acting reversible contraception in NSFG 2022–2023 stands at 10.5 percent of women 15–49. Guttmacher counts about 6.8 million IUD users and about 1.9 million implant users in the same age range. Most current United States intrauterine devices in use are levonorgestrel systems rather than copper. The implant is etonogestrel. Both are multi-year progestin delivery. Duty cycle among current users is one. Removal, not adherence, is the off-switch. The implant is concentrated among younger users: about 11 percent of adolescent contraceptive users against about 1 percent of users aged 35–49.</p>
+<p>Copper devices, male condoms attributed to female respondents, withdrawal, fertility awareness, and sterilization do not enter Composite Exogenous Load. They prevent pregnancy. They do not occupy the receptors this paper is built to count. Collapsing “contraception” into “hormones” is the error that lets a critic delete the endocrine clause. The clause is hormones.</p>
+<h3>3.3 Depot medroxyprogesterone, the patch, the ring, and later steroids</h3>
+<p>Depot medroxyprogesterone acetate is a high-occupancy progestin given every thirteen weeks. It suppresses the cycle and lowers endogenous estradiol. Current-use prevalence is smaller than the pill or the intrauterine system. Ever-use is not small. The combined patch and the vaginal ring are daily-equivalent estrogen-progestin delivery by another route. They are Tier 1 by mechanism, not by headline share.</p>
+<p>Menopausal hormone therapy is the second female-only sex-steroid channel. Yang and Toriola, using NHANES through March 2020, place current use among postmenopausal women at 4.7 percent, down from 26.9 percent in 1999. Non-Hispanic White women remain the highest group at 5.8 percent. Spironolactone at acne doses is an anti-androgen prescribed to women and withheld from men because gynecomastia follows the mechanism. Prescribing for female acne rose sharply from 2017 to 2020 in claims analyses. Tamoxifen and aromatase inhibitors are multi-year estrogen-receptor modulation after hormone-receptor-positive breast cancer. Male breast cancer exists and does not move a population rate. Elagolix and relugolix combinations used for endometriosis are pharmacologic menopause. User counts are smaller than the pill. Occupancy is not small.</p>
+<p>No later section is allowed to average Tier 1 into “women take more medicines.” Men take medicines. Men do not take these medicines. A fair sex comparison of standing load begins by writing a column of zeros on the male side and then asking what else each sex takes. Exclusive occupancy also recurs in dienogest, gynecologic GnRH agents, fertility gonadotropins, and SERMs. Those classes confirm that the zero column is not an artifact of counting only the pill. They are too small to move the envelope and stay out of it. Spironolactone at acne and hirsutism doses is the same logic. In a MarketScan cohort of 38 million girls and women aged 12–40, 1.2 percent initiated the drug; 55.5 percent of initiators had acne. Initiation is not a current-stock. It stays out of the envelope. Leaving it out favors men.</p>
+<h2 id="s4">4. Tier 2. Shared classes with a stable female excess</h2>
+<p>Tier 2 is the set of standing agents both sexes can receive and that women receive at higher rates. A critic who grants Tier 1 and still wants female sobriety must win here by a margin large enough to offset a column of male zeros. The published margins run the other way.</p>
+<h3>4.1 Mental health medication</h3>
+<p>The 2024 National Health Interview Survey is the lead stock. In the prior twelve months, 19.3 percent of adults took prescription medication for depression, anxiety, or other mental health reasons: 24.9 percent of women and 13.4 percent of men. The ratio is 1.86. Counseling or therapy in the same year was 16.9 percent of women and 10.9 percent of men. The narrower 2023 item, prescription medication taken specifically for depression, was 15.3 percent of women and 7.4 percent of men. White non-Hispanic adults sat at 14.3 percent on that item. The sex-by-race cell is not published in the brief. Both published margins sit above the all-adult mean of 11.4 percent. NSFG already puts White non-Hispanic women at 14.1 percent current pill use. The intersection is unpublished. The two margins are not.</p>
+<p>IQVIA fills add the slope. From January 2016 through December 2022 the monthly antidepressant dispensing rate rose 66.3 percent. After March 2020 the slope steepened and the steepening was female. Among female adolescents the post-outbreak slope was 129.6 percent faster than the pre-outbreak slope. Male adolescent dispensing fell relative to its counterfactual. Two readings of the gap are admitted. Women report higher internalizing symptom rates, so part of the fill gap is treated morbidity. Men with comparable distress use services less. Neither reading deletes 24.9 percent. A population can need more treatment and still be more mediated. The ratio is not an American survey artifact. In England in 2023/24 the NHS Business Services Authority counted 5.71 million identified female antidepressant patients against 3.03 million male patients, a ratio of 1.88 against 1.86 in NHIS 2024.</p>
+<figure id="fig-3"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">MH meds, 2024</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:99.6%"></i></div><small>24.9%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:53.6%"></i></div><small>13.4%</small></div>
+</div></div><div class="bar-row"><div class="lab">Depression, 2023</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:61.199999999999996%"></i></div><small>15.3%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:29.600000000000005%"></i></div><small>7.4%</small></div>
+</div></div></div></div><figcaption><b>Figure 3.</b> Past-year mental health medication by sex. Female rates sit near twice the male rates on both items. Counseling is omitted: it is not a ligand. Sources: NHIS 2023 and 2024.</figcaption></figure>
+<h3>4.2 Benzodiazepines, hypnotics, thyroid, and GLP-1</h3>
+<p>Misuse tables will not carry the anxiolytic clause. Any-use is the standing stream. NSDUH 2021 detailed tables put past-year any use of prescription benzodiazepines among adults at 11.8 percent of women and 7.9 percent of men. The 2024 NHIS sleep-aid brief is the cleanest duty-cycle document in the federal set. Any sleep aid most days: 14.8 percent of women, 10.8 percent of men. Prescription medication: 6.4 percent of women, 3.9 percent of men. Over-the-counter aids: 7.0 and 4.3 percent. Cannabis or cannabidiol as a sleep aid did not differ by sex.</p>
+<p>Hypothyroidism treated with levothyroxine is replacement of a missing hormone, not suppression of a native cycle. It still occupies the thyroid axis with an exogenous ligand. The envelope uses the 7.5 percent seven-day female stock. A compiled census puts the female-to-male prescription ratio between 4:1 and 8:1 and a female prevalence near 11.8 percent. Optum claims placed hypothyroidism prevalence among insured women near 17.0 percent in 2019 against 5.9 percent among insured men. Autoimmune thyroiditis may explain the sex ratio. It does not convert exogenous T4 into an endogenous set point. Dropping the class is a sensitivity row. The sign survives it.</p>
+<p>GLP-1 agonists must be split by indication. Among adults with diagnosed diabetes, NHIS 2024 found no significant sex difference in injectable GLP-1 use (27.2 percent of women, 25.9 percent of men). Among adults taking the class for weight, the sex difference is large. Gallup in 2025 put weight-loss GLP-1 use at 15.2 percent of women and 9.7 percent of men. RAND’s 2025 American Life Panel put ever-use, not current use, at 15.1 percent of women aged 30–49 against 7.2 percent of men in that band. MarketScan after the June 2021 weight-management approval of semaglutide found a female-to-male rate ratio near 2.7 overall and near 4.0 for Wegovy. Weekly administration is standing occupancy. The ligand is used to overwrite an appetite baseline. Gallup’s wording in 2025 is “taking,” not ever taking, and that current-use series is the envelope input. A 2026 Gallup follow-up put current weight-loss GLP-1 use at 11 percent of all adults, so the 2025 sex-split is not a one-survey spike.</p>
+<figure id="fig-4"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Any sleep aid</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:98.66666666666667%"></i></div><small>14.8%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:72.00000000000001%"></i></div><small>10.8%</small></div>
+</div></div><div class="bar-row"><div class="lab">Rx hypnotic</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:42.66666666666667%"></i></div><small>6.4%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:26%"></i></div><small>3.9%</small></div>
+</div></div><div class="bar-row"><div class="lab">OTC sleep aid</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:46.666666666666664%"></i></div><small>7%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:28.666666666666668%"></i></div><small>4.3%</small></div>
+</div></div></div></div><figcaption><b>Figure 4.</b> Sleep aids used most days or every day in the past 30 days, NHIS 2024. Prescription hypnotics are the core nightly CNS term.</figcaption></figure>
+<figure id="fig-5"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Weight GLP-1</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:54.285714285714285%"></i></div><small>15.2%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:34.64285714285714%"></i></div><small>9.7%</small></div>
+</div></div><div class="bar-row"><div class="lab">Ever, ages 30–49</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:53.92857142857142%"></i></div><small>15.1%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:25.71428571428572%"></i></div><small>7.2%</small></div>
+</div></div><div class="bar-row"><div class="lab">Diabetes GLP-1</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:97.14285714285714%"></i></div><small>27.2%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:92.5%"></i></div><small>25.9%</small></div>
+</div></div></div></div><figcaption><b>Figure 5.</b> GLP-1 exposure by indication. Diabetes-indication use does not contrast. Weight-indication use is female-tilted. Gallup is current-use. RAND is ever-use. Sources: Gallup 2025, RAND 2025, NHIS 2024.</figcaption></figure>
+<h3>4.3 Stimulants are not a male rescue</h3>
+<p>Adult stimulant medication was the obvious candidate for a male standing class on the CNS side. It is not. Medical Expenditure Panel Survey estimates put medical stimulant use at 2.2 percent of US adults in 2023, up from 1.8 percent in 2018. IQVIA dispensing counts show female stimulant prescriptions rose 92 percent from 2012 to 2022 against 36 percent for men. By 2022 and 2023 more stimulant prescriptions were written for female patients than for male patients. The largest increase was among women aged 35–64. The class belongs in Tier 2. It is omitted from the base envelope. Adding it as a shared, female-led fill stream would raise women at least as much as men.</p>
+<h2 id="s5">5. Tier 3, the recreational ledger, male standing classes, and the envelope</h2>
+<h3>5.1 Tier 3</h3>
+<p>Tier 3 exists so that disease base rates are not laundered into a prescribing morality play. Migraine is several times more common in women. Triptans follow at about 3:1. CGRP monoclonal antibodies and gepants follow harder: commercial new-user cohorts for rimegepant have been about 88 percent female. The correct entry is a high female share inside a modest population stock. Antiresorptive drugs for osteoporosis follow postmenopausal bone loss at about 4:1. None of these classes is added to the base envelope. Adding them would raise female coverage. They stay out.</p>
+<h3>5.2 Recreational events and male standing classes</h3>
+<p>Adult men still drink more heavily. Pooled NSDUH analysis for 2022–2024 placed past-month binge use at 26.0 percent of adult men and 20.0 percent of adult women. Converted to event-days the surplus is small: about sixteen ethanol event-days per adult man per year against about ten for women. The surplus changes sign before age 26. Female binge rates among adults 18–25 sat at 31.6 per 100 and male rates at 29.9 per 100 in a 2021–2023 window. Cannabis remains male among adults (25.8 versus 20.6 percent past year) and is no longer male among adolescents (12.8 versus 9.9 percent past year at ages 12–17).</p>
+<p>Daily cannabis is standing occupancy. In 2024, 7.5 percent of people aged 12 or older used marijuana daily or almost daily in the past month. Among past-year users the daily share was 26.4 percent. Applied to the adult sex split on past-year use, that yields a working daily stock near 6.8 percent of men and 5.4 percent of women. Daily or almost daily alcohol in the same year was 3.9 percent of persons 12 or older, about 11.2 million people. That is standing ethanol, not a weekend. NSDUH did not publish the sex cell in the tables used here. The class is male-tilted in every adjacent ethanol series. It is omitted from the base envelope. It must not be added on top of the binge event-day ledger: the same daily drinkers are already inside heavy use. Substituting daily alcohol for binge event-days, at a working 5 percent of men and 3 percent of women, raises matched male coverage by a few points and does not reverse it. Table 4 prints that row.</p>
+<p>Testosterone replacement is a male analogue in kind. Epic Research places it at 0.93 percent of male patients in 2025 and 0.95 percent in the first half of 2026. Finasteride reached about 2.5 million patients in the 2024 MEPS-derived ClinCalc series, mixed benign prostatic hyperplasia and hair, or roughly 2 percent of adult men if the denominator is forced. As-needed PDE5 inhibitors stay out as events. Daily tadalafil is the standing slice and is treated in Section 7.5. Daily cigarette use in 2024 was 7.7 percent of persons aged 12 or older and remains male-tilted. It is omitted. Adding it would raise men more than women and would still leave Table 4’s surplus intact. The male standing stack that does enter Table 4 is daily cannabis, testosterone, and finasteride, with daily alcohol as an added row so it cannot be said that ethanol was scored only as a weekend.</p>
+<figure id="fig-6"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Adults 18+</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:62.5%"></i></div><small>20%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:81.25%"></i></div><small>26%</small></div>
+</div></div><div class="bar-row"><div class="lab">Ages 18–25</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:98.75%"></i></div><small>31.6%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:93.4375%"></i></div><small>29.9%</small></div>
+</div></div><div class="bar-row"><div class="lab">Ages 12–20</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:44.6875%"></i></div><small>14.3%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:38.75%"></i></div><small>12.4%</small></div>
+</div></div></div></div><figcaption><b>Figure 6.</b> Past-month binge drinking and underage use by sex. The adult male excess reverses before age 26. Sources: NSDUH pooled 2022–2024; JAMA 2021–2023 window.</figcaption></figure>
+<figure id="fig-7"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Adults, past year</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:79.23076923076924%"></i></div><small>20.6%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:99.23076923076923%"></i></div><small>25.8%</small></div>
+</div></div><div class="bar-row"><div class="lab">Ages 12–17</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:49.23076923076923%"></i></div><small>12.8%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:38.07692307692308%"></i></div><small>9.9%</small></div>
+</div></div></div></div><figcaption><b>Figure 7.</b> Cannabis exposure by sex. Adult use remains male-tilted. Adolescent past-year use is female-tilted in 2022–2023 averages.</figcaption></figure>
+<h3>5.3 A first independence envelope</h3>
+<p>Working female daily-ish margins: mental health medication 0.249, hormonal contraception all-adult working share 0.09, prescription hypnotic most days 0.064, levothyroxine 0.075, weight-indication GLP-1 0.152. The independence union is approximately 0.50. Working male margins: 0.134, zero hormones, 0.039, 0.025, 0.097. The male union is approximately 0.27. Occupancy-day translations are about 183 female days and 99 male days. Benzodiazepine any-use, over-the-counter nightly aids, spironolactone, menopausal hormone therapy, tamoxifen, and daily cannabis are omitted. Adding them would raise both sides, women more than men, except for daily cannabis. The envelope is therefore a lower sketch of the female surplus, not a ceiling.</p>
+<p>Two warnings sit on these numbers. Independence inflates unions when classes cluster in the same women. Twelve-month mental health items inflate daily stocks if short courses are common. The first warning lowers female coverage toward the largest single class, 0.249. The second warning lowers both sexes. Matched floors are 0.249 against 0.134. Matched independence envelopes are 0.50 against 0.27. Both keep the female surplus. A mixed comparison that sets the female floor against the male envelope, 0.249 against 0.27, is the one arithmetic that favors men. It is not a matched estimand. Duty-cycle-correcting the psychotropic floor before the mixed comparison is a further favor to men and is treated in Section 7.4. In ages 18–44 that mixed comparison is a tie once the floor is the hormonal term at 0.18. Matched envelopes in the same band remain 0.46 against 0.18. Population intensity in that band remains 0.58 against 0.20.</p>
+<figure id="fig-8"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Adults, P(ind)</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:100%"></i></div><small>50%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:54%"></i></div><small>27%</small></div>
+</div></div><div class="bar-row"><div class="lab">Ages 18–44</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:92%"></i></div><small>46%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:36%"></i></div><small>18%</small></div>
+</div></div></div></div><figcaption><b>Figure 8.</b> Independence envelope for random-day coverage. The restricted 18–44 band widens the ratio because contraception replaces later-life hypnotics and thyroid. Table 2.</figcaption></figure>
+<h3>5.4 Sensitivity</h3>
+<p>The attacks on the envelope are computed in Tables 4 and 5 and Figure 9. Halving twelve-month mental health medication to proxy duty cycle leaves women at 0.42 and men at 0.21. Dropping GLP-1 leaves 0.41 and 0.19. Dropping levothyroxine, the replacement class, leaves 0.46 and 0.25. Restricting hormones to the pill, converted to an all-adult share of 0.057, leaves 0.48 and 0.27. Dropping prescription hypnotics, the class most likely nested inside the mental-health item, leaves 0.46 and 0.24. Adding daily cannabis at the working sex split, testosterone at 0.9 percent of men, and finasteride at about 2 percent of men raises both sides, women to 0.53 and men to 0.34. Substituting daily alcohol at a working 5/3 sex split on top of that stack leaves 0.54 and 0.37. Among matched estimands no row reverses the sex order. The surplus never falls below 0.17.</p>
+<p>Mental health medication, benzodiazepines, and prescription hypnotics are not three independent classes. A woman on sertraline plus zolpidem may be one NHIS mental-health yes and a sleep-aid yes. Independence then double-counts CNS coverage. The honest floor is the largest single class: 0.249 for women, 0.134 for men. Those floors are the matched lower bounds. They are not to be compared with an independence envelope on the other sex. Trilliant’s 18–44 polypharmacy gap is the published joint the paper actually has. It runs in the same direction as the matched envelopes.</p>
+<figure id="fig-9"><div class="fig-body"><div class="legend"><span><i class="f"></i>Female</span><span><i class="m"></i>Male</span></div>
+<div class="bars"><div class="bar-row"><div class="lab">Base envelope</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:90.9090909090909%"></i></div><small>50%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:49.09090909090909%"></i></div><small>27%</small></div>
+</div></div><div class="bar-row"><div class="lab">MH halved</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:76.36363636363637%"></i></div><small>42%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:38.18181818181819%"></i></div><small>21%</small></div>
+</div></div><div class="bar-row"><div class="lab">Drop GLP-1</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:74.54545454545455%"></i></div><small>41%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:34.54545454545455%"></i></div><small>19%</small></div>
+</div></div><div class="bar-row"><div class="lab">Drop T4</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:83.63636363636363%"></i></div><small>46%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:45.45454545454545%"></i></div><small>25%</small></div>
+</div></div><div class="bar-row"><div class="lab">Pill only</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:87.27272727272727%"></i></div><small>48%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:49.09090909090909%"></i></div><small>27%</small></div>
+</div></div><div class="bar-row"><div class="lab">Drop hypnotics</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:83.63636363636363%"></i></div><small>46%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:43.63636363636363%"></i></div><small>24%</small></div>
+</div></div><div class="bar-row"><div class="lab">Male standing stack</div><div class="pair">
+<div class="line"><div class="track"><i class="f" style="width:96.36363636363636%"></i></div><small>53%</small></div>
+<div class="line"><div class="track"><i class="m" style="width:61.81818181818181%"></i></div><small>34%</small></div>
+</div></div></div></div><figcaption><b>Figure 9.</b> Independence coverage under attack. Matched envelopes only. Unmatched floors sit in Table 5. Male standing stack adds daily cannabis, testosterone, and finasteride. Daily tadalafil is treated in Section 7.5. Table 4.</figcaption></figure>
+<h2 id="s6">6. The reproductive-age restriction</h2>
+<p>All-adult coverage mixes two different chemical lives. After fifty, Tier 1 contraception thins and hypnotics and thyroid thicken. Before forty-five, the pill, the implant, the hormonal intrauterine system, acne-dose spironolactone, and the post-2020 psychotropic slope inhabit the same bodies. If the claim is that women are running a chemically administered youth, the test band is 18–44. Diluting that band with seventy-year-olds is how a critic makes the surplus look polite.</p>
+<p>NSFG already lives inside 15–49. A working hormonal-methods share inside that age band, after setting aside copper devices, condoms, sterilization, and withdrawal, sits near one fifth to one quarter of the age group. NHIS 2024 puts mental health medication at 20.4 percent of adults 30–44, above ages 65–74. The 18–44 psychotropic floor is not an old-woman leftover. The sex-by-age cell is unpublished, so the restricted envelope still uses 0.249 as a female floor and 0.12 as a working male value. Trilliant’s 2024 extract found women 18–44 eight points above men 18–44 on five or more concurrent prescriptions, the widest sex gap of any age group. Men and women 65 and older converge. RAND already splits GLP-1: women 30–49 at 15.1 percent ever-use against 7.2 percent of men. Sleep-aid most-days use rises with age, so the nightly term is weaker in the test band than in the all-adult envelope.</p>
+<p>A restricted working envelope raises hormones to 0.18, keeps female mental health medication at 0.249 as a floor, drops female prescription hypnotics to 0.03, lowers levothyroxine to 0.04, and uses a conservative GLP-1 of 0.08. Female coverage stays near 0.46. Male coverage falls to about 0.18. The ratio widens. Intensity moves more than coverage. Adding 0.18 hormonal occupancy to a psychotropic floor of 0.249 puts a large fraction of women 18–44 in a two-class world even before GLP-1 and spironolactone. Men in the same band have no such second class.</p>
+<p>The same band is where recreational series stop rescuing men. Binge drinking among 18–25 is tied or female-tilted. Adolescent cannabis is female-tilted on several 2022–2023 measures. The post-2020 antidepressant dispensing explosion is female. White women lead the published antidepressant race margin and the published pill margin. Their intersection is unpublished. Both margins are high.</p>
+<h2 id="s7">7. Objections</h2>
+<h3>7.1 Help-seeking</h3>
+<p>Women use mental health services more than men at a given level of reported distress. In 2021–2023, 43 percent of females with depression and 33 percent of males with depression had seen a mental health professional in the prior year. Those facts are not denied. They do not operate as a deletion key. Composite Exogenous Load is an exposure measure. A fill is a fill. The help-seeking story also stops at the clinic door of Tier 1. No one seeks levonorgestrel because a PHQ-9 told her to. No one seeks weekly semaglutide for weight because men underuse endocrinology. An objection that explains part of one class and none of the others cannot cancel a stack.</p>
+<h3>7.2 Base rates, liberty, and the envelope</h3>
+<p>Internalizing disorders, autoimmune thyroid disease, migraine, and endometriosis are more often recorded in women. Nature can raise a base rate. It cannot rewrite the definition of unmediated baseline. An ovary producing its own estradiol is not the same object as an ovary held down by etonogestrel. A serotonergic system at its untreated set point is not the same object as a system under chronic reuptake blockade, even when the blockade is justified. If the critic’s position is that any treatment of a female-typical condition is thereby natural, the word natural has been emptied. It now means common.</p>
+<p>Hormonal contraception is chosen. Choice is not an off-switch for occupancy. A chosen ligand still binds. One can defend access to the pill and still write that eleven percent of women 15–49 take it on a given cycle. Those two sentences have never been in conflict except among people who need them to be.</p>
+<p>The independence envelope is not a joint. Correct. Positive correlation among classes reduces the union and concentrates intensity on the remaining heads. Population intensity is the sum of the prevalences. Linearity of expectation does not require independence. If the same women take the pill and the SSRI and the hypnotic, coverage falls from the independence sketch toward the largest margin and those women carry more classes each. That is a worse picture for unmediated baseline, not a better one. Twelve-month items are not daily items. Also correct. If every twelve-month psychotropic item were halved, female coverage would still clear male coverage on matched envelopes because Tier 1 does not halve.</p>
+<h3>7.3 Male cannabis, GLP-1 as health, and the young drinker series</h3>
+<p>Daily inhaled cannabis and daily nicotine are standing occupancies. Adult men lead both in most recent national series. Daily or almost daily alcohol, 3.9 percent of persons 12 or older in 2024, is standing ethanol. Table 4 already adds daily cannabis with testosterone and finasteride (male coverage 0.34) and then substitutes daily alcohol at a working sex split (0.37). The gap remains 0.17. Neither manufacture a male Tier 1. Weight-indication GLP-1 lowers weight in trials. That is a health argument. It is not an unmediated-baseline argument. Success on the scale is evidence of occupancy. Women 18–25 now binge at male rates. One can call that parity. Parity in event-days, laid on top of a Tier 1 and Tier 2 standing stack that men in the same band do not carry, is not a sobriety result.</p>
+<p>Medicine is not drunkenness. An SSRI is not beer. The comparison that survives is duty cycle. Beer occupies for hours. The intrauterine system occupies for years. If the critic’s only point is lexical, the lexicon has already been replaced in Section 1.</p>
+<h3>7.4 The unmatched-bounds steelman</h3>
+<p>The strongest remaining arithmetic against the thesis is this. Put every female class inside the mental-health item, so female coverage collapses to 0.249. Leave every male class independent, so male coverage stays at 0.27. Men then lead by two points. That is the unmatched-bounds comparison: a female lower bound set against a male upper envelope. It is the comparison a critic should want. It is also a comparison of two different objects. The matched floors are 0.249 against 0.134. The matched envelopes are 0.50 against 0.27. Perfect nesting of hormones, thyroid, hypnotics, and GLP-1 inside 24.9 percent mental-health medication is not a clinical claim. It is a limit. Weight-indication GLP-1 at 15.2 percent cannot sit entirely inside a 24.9 percent psychotropic stock unless nearly every incretin user is already on a mental-health drug. Trilliant’s 18–44 polypharmacy gap already says the opposite of perfect nesting: more concurrent classes in women, not one class wearing five names.</p>
+<p>Even if the limit is granted, the next tightening duty-cycle-corrects the psychotropic floor. Twelve-month mental health medication halved is 0.125 for women. Hormonal current use does not halve. It is already duty cycle 1. All-adult unmatched then becomes 0.125 against 0.27, a male lead of fifteen points. That row stacks three favors: collapse on women, independence on men, and a duty-cycle cut applied only to the twelve-month item. In ages 18–44 the female floor after that cut is the hormonal term, 0.18, against a male envelope of about 0.18. That is a tie on unmatched bounds. It is not a reversal of matched envelopes in the same band, which remain 0.46 against 0.18. A tie on the largest class is not a tie on the stack. Population intensity in that band is 0.58 expected classes against 0.20. Nesting does not subtract those classes. It loads them onto fewer women. Table 5 prints both unmatched rows so it cannot be said that they were hidden.</p>
+<h3>7.5 Widening the construct</h3>
+<p>A different steelman changes the mechanism test. If occupancy is any daily prescription, lisinopril, atorvastatin, and amlodipine become male-heavy standing classes in later life. The paper refused that construct in Section 2.2: a statin does not occupy monoaminergic, HPG, thyroid, incretin, or sleep circuitry as indexed here. Even under the wider construct the published joint still fails to rescue young men. Trilliant’s 18–44 polypharmacy gap is female. The 65-and-older gap closes. Widening the net moves the surplus into cardiometabolic old age and leaves the reproductive-age steroid layer untouched.</p>
+<p>Daily tadalafil is the one PDE5 slice that belongs in a male standing stack. ClinCalc 2024 counts about 1.45 million tadalafil patients. Five milligrams, the daily BPH and daily ED dose, is half of dispensed product. On the adult-male denominator that is about 1 percent of men: smaller than finasteride, smaller than daily cannabis, and not a contraceptive layer. As-needed sildenafil remains an event class. Adding daily tadalafil to Table 4’s male standing stack moves male coverage by a point or less. It does not reverse the gap.</p>
+<h2 id="s8">8. Limits of measurement and the extract that would close them</h2>
+<p>The principal hole is concurrent class membership in a thirty-day window. NHIS will say how many women took mental health medication last year. NSFG will say how many women aged 15–49 are current pill users. Neither will say how many of the second group are inside the first. Clinical eligibility criteria place no restriction on hormonal contraception for women with depressive disorders on modern antidepressants. Ordinary is not a count. MEPS prescribed-medicine files can build the cell: antidepressants, anxiolytics and hypnotics with days supplied of at least fifteen, levothyroxine, GLP-1 agonists with a weight indication, hormonal contraceptives including levonorgestrel intrauterine systems, spironolactone in women under 50 without a cardiac code, tamoxifen and aromatase inhibitors, menopausal estrogen. Outputs: coverage and intensity by sex and by ages 18–44; the four-cell hormone-by-psychotropic table; race-by-sex cells for White non-Hispanic adults.</p>
+<p>The prediction is that positive dependence is the rule in ages 18–44. Coverage will sit closer to the psychotropic or hormonal margin than to 0.50. Intensity will sit higher. The sex order will not flip. NSFG “IUD” mixes copper and levonorgestrel. The working hormonal share of 0.18 in ages 15–49 is a judgment. If copper is a larger fraction, contraceptive occupancy falls by a few points. It does not fall to zero. Oral pills alone remain 11.4 percent of the age group. Spironolactone sits in the logic of Tier 1 and sits out of the numeric envelope until a fill rate exists. Leaving it out favors men. No table here is a plasma level or a working-memory score. The leap from “takes the agent” to “baseline is displaced” is the leap the construct requires.</p>
+<h2 id="s9">9. What the sign is allowed to mean</h2>
+<p>On a random day in the mid-2020s United States, a larger share of adult women than of adult men are under standing pharmaceutical command of at least one qualifying endocrine or CNS class. The largest shared class is mental health medication, at roughly two women for every man. The largest unshared class is hormonal contraception, at several million current users against a male pharmaceutical cell of zero. Those sentences are compatible with women having higher treated internalizing prevalence and a monopoly on gestation. They are compatible with men binge drinking more after 25. Compatibility is not cancellation.</p>
+<p>The sign does not say that every woman is mediated. A coverage near one half is also a statement that the other half is not inside the union. The sign does not say that women are drunk. The operational replacement for the slogan “socially drunk 24/7” is narrower: high duty-cycle occupancy sufficient to displace native HPG signaling and, in a large minority, monoaminergic tone and sleep initiation, on most days of the year. The sign does not say that treatment is a mistake. Better off is a clinical sentence. Unmediated is an accounting sentence. The sign does not say that men are a natural baseline. Men take nicotine, cannabis, ethanol, sleep aids, and antidepressants at half the female rate. The comparison is relative. Relative is enough to reject the claim that women are the more sober sex under this construct.</p>
+<p>Peak intensity favors the binge. Duration favors the tablet. A year contains 8,760 hours. Sixteen binge days, even if each day is scored as fully impaired, are 384 hours. A year of an SSRI is the year. A year of a hormonal intrauterine system is the year. Once duration is admitted, the recreational surplus cannot carry the construct. Ages 18–44 are where the move has consequences beyond bookkeeping. This is the band told that it is the healthiest and most autonomous female cohort yet measured. It is also the band with a female-only steroid layer, a doubled psychotropic layer relative to same-age men, a closed or reversed binge gap, and a rising incretin rewrite. Autonomy in the political sense and mediation in the pharmacological sense are being run as if they were the same variable. They are not.</p>
+<p>Three empirical results would force a rewrite. A claims thirty-day window in which female coverage is less than or equal to male coverage after Tier 1 is coded. A days-supplied correction that collapses twelve-month female psychotropic use so far that, even with hormones, matched female coverage falls to matched male coverage. A demonstration that most “current” hormonal users are not in a steroid state. Clinical practice makes the first conjunction unlikely. The second is the matched rows of Table 4. The third would be a survey scandal, not a reinterpretation. A tie on unmatched bounds after stacking three favors to men is not a rewrite.</p>
+<h2 id="s10">10. Conclusion</h2>
+<p>Folk sobriety is a weekend. Unmediated baseline is a year. Once the second construct is the construct, the published American record of the mid-2020s does not award standing occupancy to women as the more sober sex.</p>
+<p>Tier 1 is one-sided. The male pharmaceutical analogue of hormonal contraception is zero. Tier 2 is shared and still female, including adult stimulant fills, which by 2022–23 were written more often for women than for men. Testosterone at about 1 percent of men and finasteride at a few million patients are real male standing classes. Daily cannabis is the largest male-tilted standing recreational term. Added together they do not reverse the envelope. Sensitivity rows that halve psychotropic duty cycle, drop GLP-1, drop thyroid replacement, and restrict hormones to the pill do not reverse it either.</p>
+<p>The licensed claim is small and hard. When sobriety is the preservation of an unmediated neurochemical and metabolic baseline, adult women carry the higher per capita Composite Exogenous Load on matched estimands. The surplus is pharmaceutical. It is thickest at ages 18–44, where even the unmatched-bounds steelman, once duty-cycle-corrected, is a tie on floors against an envelope and a female lead on matched envelopes. Occupancy is a population fact. Benefit is a clinical fact. They are not one word. The word this paper kept is baseline.</p>
+<p class="tbl-cap"><b>Table 1.</b> Parts list, standing occupancy, mid-2020s United States.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Class</th><th>Tier</th><th>Female</th><th>Male</th><th>Duty</th><th>Source</th></tr></thead><tbody><tr><td>Mental health Rx, 12 mo</td><td>2</td><td>24.9%</td><td>13.4%</td><td>High</td><td>NHIS 2024</td></tr><tr><td>Depression Rx, 12 mo</td><td>2</td><td>15.3%</td><td>7.4%</td><td>High</td><td>NHIS 2023</td></tr><tr><td>Oral contraception, 15–49</td><td>1</td><td>11.4%</td><td>0</td><td>Daily</td><td>NSFG 2022–23</td></tr><tr><td>LARC, 15–49</td><td>1</td><td>10.5%</td><td>0</td><td>Continuous</td><td>NSFG 2022–23</td></tr><tr><td>IUD users, 15–49</td><td>1*</td><td>6.8 million</td><td>0</td><td>Continuous</td><td>Guttmacher</td></tr><tr><td>Implant users, 15–49</td><td>1</td><td>1.9 million</td><td>0</td><td>Continuous</td><td>Guttmacher</td></tr><tr><td>MHT, postmenopausal</td><td>1</td><td>4.7%</td><td>0</td><td>Daily</td><td>NHANES to 2020</td></tr><tr><td>Sleep aid most days</td><td>2</td><td>14.8%</td><td>10.8%</td><td>Daily</td><td>NHIS 2024</td></tr><tr><td>Rx hypnotic most days</td><td>2</td><td>6.4%</td><td>3.9%</td><td>Daily</td><td>NHIS 2024</td></tr><tr><td>Benzo any-use, adults</td><td>2</td><td>11.8%</td><td>7.9%</td><td>Mixed</td><td>NSDUH 2021</td></tr><tr><td>Levothyroxine, 7-day</td><td>2</td><td>7.5%</td><td>low</td><td>Daily</td><td>2023–24 census</td></tr><tr><td>GLP-1, weight indication</td><td>2</td><td>15.2%</td><td>9.7%</td><td>Weekly</td><td>Gallup 2025</td></tr><tr><td>GLP-1 ever, ages 30–49</td><td>2</td><td>15.1%</td><td>7.2%</td><td>Weekly</td><td>RAND 2025</td></tr><tr><td>GLP-1, diabetes</td><td>2</td><td>27.2%</td><td>25.9%</td><td>Weekly</td><td>NHIS 2024</td></tr><tr><td>Adult stimulants</td><td>2</td><td>female-led fills</td><td>2.2% of adults</td><td>Daily</td><td>MEPS / IQVIA</td></tr><tr><td>TRT</td><td>male</td><td>~0</td><td>~0.9%</td><td>Standing</td><td>Epic 2025</td></tr><tr><td>Finasteride</td><td>male</td><td>low</td><td>~2.5 million pts</td><td>Daily</td><td>ClinCalc 2024</td></tr><tr><td>Tadalafil patients</td><td>male</td><td>low</td><td>~1.45 million pts</td><td>Mixed daily/PRN</td><td>ClinCalc 2024</td></tr><tr><td>Daily cannabis, 12+</td><td>side</td><td>working ~5.4%</td><td>working ~6.8%</td><td>Standing</td><td>NSDUH 2024</td></tr><tr><td>Daily alcohol, 12+</td><td>side</td><td>working ~3%</td><td>working ~5%</td><td>Standing</td><td>NSDUH 2024</td></tr><tr><td>Binge, adults</td><td>side</td><td>20.0%</td><td>26.0%</td><td>Event</td><td>NSDUH 2022–24</td></tr><tr><td>Binge, 18–25</td><td>side</td><td>31.6/100</td><td>29.9/100</td><td>Event</td><td>JAMA window</td></tr><tr><td>Cannabis past year, adults</td><td>side</td><td>20.6%</td><td>25.8%</td><td>Mixed</td><td>2022–24</td></tr></tbody></table></div><p class="note">*IUD total mixes copper and levonorgestrel. Only the second is Tier 1. Daily cannabis sex split is a working application of 26.4 percent daily-among-users to the adult past-year sex split. Daily alcohol at 3.9 percent of persons 12 or older has no published sex cell in the tables used here; the 5/3 working split follows the male tilt in adjacent ethanol series.</p>
+<p class="tbl-cap"><b>Table 2.</b> First independence envelope. Classes: mental health Rx, hormonal working share, most-days Rx hypnotic, levothyroxine, weight-indication GLP-1. Restricted envelope raises hormones to 0.18 and lowers hypnotics, thyroid, and GLP-1. Male 18–44 mental health 0.12 is a working value; NHIS does not publish the sex-by-age cell. Male standing classes enter only in Table 4.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Estimand</th><th>Adult women</th><th>Adult men</th><th>Women 18–44</th><th>Men 18–44</th></tr></thead><tbody><tr><td>Coverage P(ind)</td><td>0.50</td><td>0.27</td><td>0.46</td><td>0.18</td></tr><tr><td>Occupancy-days D</td><td>183</td><td>99</td><td>168</td><td>66</td></tr><tr><td>Intensity Λ</td><td>0.63</td><td>0.30</td><td>0.58</td><td>0.20</td></tr><tr><td>Ethanol event-days</td><td>~10</td><td>~16</td><td>tied or female</td><td>tied or male</td></tr><tr><td>Lower bound on coverage</td><td>0.249</td><td>0.134</td><td>0.249 floor</td><td>0.12 working</td></tr></tbody></table></div>
+<p class="tbl-cap"><b>Table 3.</b> What is in the index, what is refused, and the male standing stack. Envelope classes remain those in Table 2.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Group</th><th>Role</th><th>Stock</th><th>Duty</th></tr></thead><tbody><tr><td>COCs, LNG-IUS, implants, patch, ring, DMPA, MHT</td><td>Tier 1</td><td>100% female</td><td>Daily or continuous</td></tr><tr><td>SSRIs, hypnotics, T4, weight GLP-1</td><td>Tier 2 envelope</td><td>Female excess</td><td>Daily or weekly</td></tr><tr><td>Adult stimulants</td><td>Tier 2, omitted</td><td>2.2% of adults; female fill lead</td><td>Daily</td></tr><tr><td>CGRP, triptans, bisphosphonates</td><td>Tier 3, omitted</td><td>Female-concentrated disease</td><td>Scheduled</td></tr><tr><td>TRT</td><td>Male standing</td><td>~0.9% of men</td><td>Standing</td></tr><tr><td>Finasteride</td><td>Male standing</td><td>~2.5 million patients</td><td>Daily</td></tr><tr><td>Tadalafil 5 mg daily</td><td>Male standing</td><td>~half of 1.45 million patients</td><td>Daily</td></tr><tr><td>Daily cannabis</td><td>Shared standing</td><td>~7.5% of persons 12+</td><td>Daily</td></tr><tr><td>Daily alcohol</td><td>Shared standing</td><td>3.9% of persons 12+</td><td>Daily</td></tr><tr><td>Sildenafil PRN, emergency contraception, oxytocin</td><td>Event, refused</td><td>Sex-typical episodes</td><td>Hours to a day</td></tr><tr><td>Cosmetics, musks, hair dye</td><td>Environment, refused</td><td>Female biomonitoring excess</td><td>Not a ligand</td></tr></tbody></table></div>
+<p class="tbl-cap"><b>Table 4.</b> Matched coverage under attack. Independence rows and matched floors only. Male standing stack adds daily cannabis, testosterone, and finasteride. Daily alcohol is a substitution, not a double count on binge event-days. No matched row reverses the sex order.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Row</th><th>Women P</th><th>Men P</th><th>Gap</th><th>Women D</th><th>Men D</th></tr></thead><tbody><tr><td>Base envelope</td><td>0.50</td><td>0.27</td><td>0.23</td><td>183</td><td>99</td></tr><tr><td>Mental health halved</td><td>0.42</td><td>0.21</td><td>0.21</td><td>153</td><td>77</td></tr><tr><td>Drop GLP-1</td><td>0.41</td><td>0.19</td><td>0.22</td><td>150</td><td>69</td></tr><tr><td>Drop levothyroxine</td><td>0.46</td><td>0.25</td><td>0.21</td><td>168</td><td>91</td></tr><tr><td>Hormones = pill only</td><td>0.48</td><td>0.27</td><td>0.21</td><td>175</td><td>99</td></tr><tr><td>Drop hypnotics</td><td>0.46</td><td>0.24</td><td>0.22</td><td>169</td><td>87</td></tr><tr><td>Add male standing stack</td><td>0.53</td><td>0.34</td><td>0.19</td><td>193</td><td>124</td></tr><tr><td>Stack + daily alcohol</td><td>0.54</td><td>0.37</td><td>0.17</td><td>197</td><td>135</td></tr><tr><td>Matched floors</td><td>0.249</td><td>0.134</td><td>0.115</td><td>91</td><td>49</td></tr></tbody></table></div>
+<p class="tbl-cap"><b>Table 5.</b> Unmatched bounds. Each row pairs a female lower bound with a male independence envelope. These are not matched estimands. Duty-cycle-correcting the psychotropic floor before the mixed comparison produces an all-adult male lead and an 18–44 tie on the hormonal term. Matched 18–44 envelopes remain 0.46 against 0.18 in Table 2. Intensity in that band remains 0.58 against 0.20.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Row</th><th>Women P</th><th>Men P</th><th>Gap</th><th>Women D</th><th>Men D</th></tr></thead><tbody><tr><td>F floor vs M envelope</td><td>0.249</td><td>0.27</td><td>−0.02</td><td>91</td><td>99</td></tr><tr><td>Unmatched at 18–44</td><td>0.249</td><td>0.18</td><td>0.07</td><td>91</td><td>66</td></tr><tr><td>Adult, MH halved floor</td><td>0.125</td><td>0.27</td><td>−0.15</td><td>46</td><td>99</td></tr><tr><td>18–44, MH halved (hormone floor)</td><td>0.18</td><td>0.18</td><td>0.00</td><td>66</td><td>66</td></tr></tbody></table></div>
+<h2 id="refs">References</h2>
+<ol class="refs"><li>Briones, Elizabeth M., and Maria A. Villarroel. 2026. <i>Mental Health Treatment Among Adults: United States, 2024</i>. NCHS Data Brief no. 564.</li>
+<li>Elgaddal, Nazik, Julie D. Weeks, and Laryssa Mykyta. 2025. <i> Characteristics of Adults Age 18 and Older Who Took Prescription Medication for Depression: United States, 2023 </i> . NCHS Data Brief no. 528.</li>
+<li>Daniels, Kimberly, and Joyce C. Abma. 2025. <i>Current Contraceptive Status Among Females Ages 15–49: United States, 2022–2023</i>. NCHS Data Brief no. 539.</li>
+<li>Guttmacher Institute. 2026. Contraceptive Need, Use and Preferences in the United States. Fact sheet.</li>
+<li>Mykyta, Laryssa, Nazik Elgaddal, and Antonia Warren. 2026. <i>Use of Sleep Aids Among Adults Age 18 and Older: United States, 2024</i>. NCHS Health E-Stat 116.</li>
+<li>Substance Abuse and Mental Health Services Administration. 2025–2026. NSDUH detailed tables and key substance use indicators, 2021–2025 cycles.</li>
+<li>Karaye, Ibraheem M., et al. 2025. Sex-based differences in binge and heavy drinking among US adults. <i>JAMA</i>.</li>
+<li>RAND American Life Panel. 2025. GLP-1 agonist use and side effects in the United States. <i>RAND Health Quarterly</i> 13(1).</li>
+<li>Gallup. 2025. Obesity rate declining in U.S.; GLP-1 use for weight loss by sex. 2026 follow-up: 11 percent of adults currently taking GLP-1 for weight loss.</li>
+<li>MarketScan interrupted series after FDA approval of semaglutide (Wegovy) for chronic weight management, utilization by sex through January 2024.</li>
+<li>IQVIA Longitudinal Prescription Database analysis, 2016–2022, antidepressant dispensing to adolescents and young adults by sex.</li>
+<li>Yang, L., and A. T. Toriola. 2024. Menopausal hormone therapy use among postmenopausal women. <i>JAMA Health Forum</i>.</li>
+<li>Optum claims and NHANES analyses of hypothyroidism prevalence and levothyroxine treatment by sex, 2009–2019.</li>
+<li>Trilliant Health. 2025. Polypharmacy prevalence by age and sex, 2024 claims.</li>
+<li>Barbieri, John S., et al. 2023. Temporal trends in the use of systemic medications for acne, 2017–2020. <i>JAMA Dermatology</i>.</li>
+<li>Maust, Donovan T., et al. Benzodiazepine use and misuse among adults in the United States. <i>Psychiatric Services</i> / NSDUH analyses.</li>
+<li>National Center for Health Statistics. 2024. GLP-1 injectable use among adults with diagnosed diabetes. NHIS.</li>
+<li>Hasin, Deborah S., et al. 2026. Trends in the prevalence and severity of alcohol and cannabis use disorders among US adults. <i>JAMA Psychiatry</i>.</li>
+<li>Olfson, Mark, et al. 2026. Trends and patterns of medical stimulant use by US adults. MEPS 2018–2023. <i>Molecular Psychiatry</i>.</li>
+<li>IQVIA / DEA. 2024. Report on stimulant trends. Female stimulant prescriptions +92 percent versus male +36 percent, 2012–2022; female fill lead in 2022–2023.</li>
+<li>Bartelt, Kersten, and Caleb Cox. 2026. After nearly a decade-long decrease, testosterone prescribing rates rising again. Epic Research.</li>
+<li>ClinCalc DrugStats. 2024. Finasteride, testosterone, and tadalafil patient counts from MEPS.</li>
+<li>NHS Business Services Authority. 2024. Medicines used in mental health, England 2023/24. Identified antidepressant patients by sex.</li>
+<li>Soppe, Sarah, et al. 2025. Trends in the proportion of young women and girls prescribed spironolactone. <i>JAMA Network Open</i>. MarketScan cohort, ages 12–40.</li></ol>
 </article>
+</div>
+<script>
+const btn=document.getElementById('menuBtn');
+const drawer=document.getElementById('drawer');
+const scrim=document.getElementById('scrim');
+btn.onclick=()=>drawer.classList.add('open');
+scrim.onclick=()=>drawer.classList.remove('open');
+drawer.querySelectorAll('a').forEach(a=>a.onclick=()=>drawer.classList.remove('open'));
+const links=[...document.querySelectorAll('.toc a')];
+const ids=links.map(a=>a.getAttribute('href').slice(1));
+const obs=new IntersectionObserver((ents)=>{
+  ents.forEach(e=>{ if(e.isIntersecting){
+    links.forEach(a=>a.classList.toggle('on', a.getAttribute('href')==='#'+e.target.id));
+  }});
+},{rootMargin:'-20% 0px -70% 0px',threshold:0});
+ids.forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+</script>
 </body>
 </html>
